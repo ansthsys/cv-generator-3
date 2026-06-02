@@ -12,6 +12,7 @@ interface FieldInputProps {
   onChange: React.ChangeEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>
   placeholder?: string
+  type?: string
 }
 
 function FieldInput({
