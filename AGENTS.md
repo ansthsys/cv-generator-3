@@ -16,8 +16,10 @@
 
 - Components: Atomic Design (atoms, molecules, organisms, templates)
 - Component files: PascalCase (`Button.tsx`, `UserCard.tsx`)
+- Folder names: kebab-case (`plain-field/`, `tanstack-query/`, `better-auth/`)
 - Utility files: kebab-case (`format-date.ts`, `cn.ts`)
 - Use `#/` path alias for all imports (e.g. `#/components/atoms/Button`)
+- Form composition: `useAppForm` from `#/hooks/useAppForm`; molecule layers split as `plain-field/` (pure UI props) and `form-field/` (context-aware via `useFieldContext`, export `FormFieldXxx`)
 
 ## UI
 

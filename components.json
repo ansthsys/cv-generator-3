@@ -13,8 +13,8 @@
   "aliases": {
     "ui": "#/components/atoms/ui",
     "components": "#/components/organisms",
-    "utils": "#/utils/cn.ts",
-    "lib": "#/lib/",
+    "utils": "#/utils",
+    "lib": "#/lib",
     "hooks": "#/hooks"
   },
   "iconLibrary": "lucide",

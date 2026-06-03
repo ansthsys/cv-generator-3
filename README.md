@@ -55,19 +55,22 @@ See [AGENTS.md](./AGENTS.md) for complete coding conventions used in this projec
 
 ```
 src/
-  assets/         Static assets (images, styles)
-  components/     Atomic Design components
-    atoms/        Smallest UI primitives
-    molecules/    Composite components
-    organisms/    Complex UI sections
-    templates/    Page layouts
-  lib/            Business logic, utilities
-    better-auth/  Authentication setup
-    tanstack-query/ TanStack Query setup
-  routes/         File-based routes (TanStack Router)
-    api/          API route handlers
-  router.tsx      Router configuration
-  db.ts           Prisma client
+  assets/             Static assets (images, styles)
+  components/         Atomic Design components
+    atoms/            Smallest UI primitives
+    molecules/        Composite components
+      plain-field/    Pure UI field components (value, onChange props)
+      form-field/     Context-aware field components (useFieldContext, FormFieldXxx)
+    organisms/        Complex UI sections
+    templates/        Page layouts
+  hooks/              Custom hooks
+  lib/                Business logic, utilities
+    better-auth/      Authentication setup
+    tanstack-query/   TanStack Query setup
+  routes/             File-based routes (TanStack Router)
+    api/              API route handlers
+  router.tsx          Router configuration
+  db.ts               Prisma client
 ```
 
 ## Database
@@ -83,6 +86,27 @@ bun run db:studio
 ## Authentication
 
 Authentication is handled by [better-auth](https://www.better-auth.com) with the `tanstackStartCookies()` plugin. Session is automatically injected into the router context via the root route's `beforeLoad`.
+
+## Form Composition
+
+Forms use TanStack Form's `createFormHook` composition API. Field components are split into two layers:
+
+- **`plain-field/`** — Pure UI components that accept props like `value`, `onChange`, `error`. Framework-agnostic.
+- **`form-field/`** — Context-aware wrappers that use `useFieldContext()` from TanStack Form. Exported as `FormFieldXxx` and registered via `createFormHook` in `useAppForm`.
+
+Usage:
+
+```tsx
+const form = useAppForm({ defaultValues: {...} })
+
+<form.AppField name="email">
+  {(field) => <field.FieldInput label="Email" />}
+</form.AppField>
+
+<form.AppForm>
+  <form.SubscribeButton label="Submit" />
+</form.AppForm>
+```
 
 ## Shadcn
 

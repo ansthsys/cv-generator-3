@@ -1,4 +1,3 @@
-import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -18,13 +17,7 @@ import {
   TypographyOl,
   TypographyLi,
 } from '#/components/atoms/typography'
-import {
-  FieldInput,
-  FieldTextarea,
-  FieldSelect,
-  FieldCheckbox,
-  FieldRadioGroup,
-} from '#/components/molecules/form-field'
+import { useAppForm } from '#/hooks/useAppForm'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -40,19 +33,8 @@ const planOptions = [
   { value: 'enterprise', label: 'Enterprise' },
 ]
 
-const formSchema = z.object({
-  name: z.string().min(3, 'Minimal 3 karakter'),
-  bio: z
-    .string()
-    .min(10, 'Minimal 10 karakter')
-    .max(200, 'Maksimal 200 karakter'),
-  gender: z.string().min(1, 'Pilih gender'),
-  skills: z.array(z.string()).min(1, 'Pilih minimal 1 skill'),
-  plan: z.string().min(1, 'Pilih plan'),
-})
-
 function Home() {
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       name: '',
       bio: '',
@@ -61,7 +43,16 @@ function Home() {
       plan: '',
     },
     validators: {
-      onSubmit: formSchema,
+      onChange: z.object({
+        name: z.string().min(3, 'Minimal 3 karakter'),
+        bio: z
+          .string()
+          .min(10, 'Minimal 10 karakter')
+          .max(200, 'Maksimal 200 karakter'),
+        gender: z.string().min(1, 'Pilih gender'),
+        skills: z.array(z.string()).min(1, 'Pilih minimal 1 skill'),
+        plan: z.string().min(1, 'Pilih plan'),
+      }),
     },
     onSubmit: ({ value }) => {
       console.log(value)
@@ -121,99 +112,61 @@ function Home() {
           }}
           className="space-y-4"
         >
-          <form.Field
-            name="name"
-            validators={{ onChange: z.string().min(3, 'Minimal 3 karakter') }}
-          >
+          <form.AppField name="name">
             {(field) => (
-              <FieldInput
-                title="Nama Lengkap"
-                description={
-                  'Lorem ipsum dolor sit amet, esse amet sunt consectetur ipsum sint do aute exercitation ut. Consectetur quis nostrud anim reprehenderit dolor sit quis eiusmod aliqua laboris enim consectetur reprehenderit velit duis laborum sit anim. Esse consequat pariatur consequat ut tempor eu dolore elit nostrud excepteur mollit cupidatat minim nulla dolore minim dolor sit.'
-                }
+              <field.FieldInput
+                label="Nama Lengkap"
+                description="Lorem ipsum dolor sit amet, esse amet sunt consectetur ipsum sint do aute exercitation ut."
                 placeholder="John Doe"
-                error={field.state.meta.errors[0]?.message}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
               />
             )}
-          </form.Field>
+          </form.AppField>
 
-          <form.Field
-            name="bio"
-            validators={{ onChange: z.string().min(10, 'Minimal 10 karakter') }}
-          >
+          <form.AppField name="bio">
             {(field) => (
-              <FieldTextarea
-                title="Bio"
+              <field.FieldTextarea
+                label="Bio"
                 placeholder="Tell us about yourself..."
-                error={field.state.meta.errors[0]?.message}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
                 rows={4}
               />
             )}
-          </form.Field>
+          </form.AppField>
 
-          <form.Field
-            name="gender"
-            validators={{ onChange: z.string().min(1, 'Pilih gender') }}
-          >
+          <form.AppField name="gender">
             {(field) => (
-              <FieldSelect
-                title="Gender"
+              <field.FieldSelect
+                label="Gender"
                 placeholder="Pilih"
-                error={field.state.meta.errors[0]?.message}
-                value={field.state.value}
-                onValueChange={field.handleChange}
                 options={[
                   { value: 'L', label: 'Laki-laki' },
                   { value: 'P', label: 'Perempuan' },
                 ]}
               />
             )}
-          </form.Field>
+          </form.AppField>
 
-          <form.Field name="skills" mode="array">
+          <form.AppField name="skills">
             {(field) => (
-              <FieldCheckbox
-                title="Skills"
+              <field.FieldCheckbox
+                label="Skills"
                 description="Pilih minimal 1"
-                error={field.state.meta.errors[0]?.message}
-                checked={field.state.value.length > 0}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    field.pushValue(skillOptions[0].value)
-                  }
-                }}
                 options={skillOptions}
               />
             )}
-          </form.Field>
+          </form.AppField>
 
-          <form.Field
-            name="plan"
-            validators={{ onChange: z.string().min(1, 'Pilih plan') }}
-          >
+          <form.AppField name="plan">
             {(field) => (
-              <FieldRadioGroup
-                title="Subscription Plan"
-                error={field.state.meta.errors[0]?.message}
-                value={field.state.value}
-                onValueChange={field.handleChange}
+              <field.FieldRadioGroup
+                label="Subscription Plan"
                 options={planOptions}
               />
             )}
-          </form.Field>
+          </form.AppField>
 
-          <button
-            type="submit"
-            className="h-9 w-full rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs"
-          >
-            Submit
-          </button>
+          <form.AppForm>
+            <form.SubscribeButton label="Submit" />
+          </form.AppForm>
         </form>
       </section>
     </div>
