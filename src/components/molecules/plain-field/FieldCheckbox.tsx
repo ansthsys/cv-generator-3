@@ -9,9 +9,9 @@ interface FieldCheckboxProps {
   title: string
   description?: string | null
   error?: string | null
-  checkedValues: string[]
-  onCheckedChange: (value: string, checked: boolean) => void
-  options: { value: string; label: string }[]
+  value: boolean | string[]
+  onChange: (value: boolean | string[]) => void
+  options?: { value: string; label: string }[]
   orientation?: 'vertical' | 'horizontal'
   renderOption?: (props: {
     option: { value: string; label: string }
@@ -25,13 +25,31 @@ function FieldCheckbox({
   title,
   description,
   error,
-  checkedValues,
-  onCheckedChange,
-  options,
+  value,
+  onChange,
+  options = [],
   orientation = 'vertical',
   renderOption,
 }: FieldCheckboxProps) {
   const id = React.useId()
+
+  if (typeof value === 'boolean') {
+    return (
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id={id}
+          checked={value}
+          onCheckedChange={(val) => {
+            if (typeof val === 'boolean') onChange(val)
+          }}
+          aria-invalid={!!error}
+        />
+        <FieldLabel htmlFor={id} className="font-normal">
+          {title}
+        </FieldLabel>
+      </div>
+    )
+  }
 
   return (
     <Field title={title} description={description} error={error}>
@@ -43,10 +61,13 @@ function FieldCheckbox({
         }
       >
         {options.map((opt, index) => {
-          const checked = checkedValues.includes(opt.value)
+          const checked = value.includes(opt.value)
           const optionId = `${id}-${index}`
-          const onChange = (val: boolean) => {
-            onCheckedChange(opt.value, val)
+          const handleChange = (val: boolean) => {
+            const next = val
+              ? [...value, opt.value]
+              : value.filter((v) => v !== opt.value)
+            onChange(next)
           }
 
           if (renderOption) {
@@ -54,7 +75,7 @@ function FieldCheckbox({
               option: opt,
               checked,
               id: optionId,
-              onChange,
+              onChange: handleChange,
             })
           }
 
@@ -64,7 +85,7 @@ function FieldCheckbox({
                 id={optionId}
                 checked={checked}
                 onCheckedChange={(val) => {
-                  if (typeof val === 'boolean') onChange(val)
+                  if (typeof val === 'boolean') handleChange(val)
                 }}
                 aria-invalid={!!error}
               />

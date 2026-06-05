@@ -1,27 +1,52 @@
-import { useForm } from '@tanstack/react-form'
-import { z } from 'zod'
-
-import { Button } from '#/components/atoms/ui/button'
-import { FieldInput } from '#/components/molecules/form-field'
-import { Link } from '@tanstack/react-router'
+import { useState } from 'react'
+import { Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { FaGithub } from 'react-icons/fa'
 
-const signInSchema = z.object({
-  email: z.string().email('Email tidak valid'),
-  password: z.string().min(8, 'Minimal 8 karakter'),
-})
+import { Button } from '#/components/atoms/ui/button'
+import {
+  TypographyH3,
+  TypographyMuted,
+  linkVariants,
+} from '#/components/atoms/typography'
+import { authClient } from '#/lib/better-auth/auth-client'
+import { loginFormOpts } from '#/lib/form/auth/login'
+import { useAppForm } from '#/hooks/useAppForm'
+import { FieldGroup, FieldSeparator } from '#/components/atoms/ui/field'
+import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
 
-function SignInForm() {
-  const form = useForm({
+interface SignInFormProps {
+  initialEmail?: string
+}
+
+function SignInForm({ initialEmail }: SignInFormProps) {
+  const navigate = useNavigate()
+  const router = useRouter()
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const form = useAppForm({
+    ...loginFormOpts,
     defaultValues: {
-      email: '',
+      email: initialEmail ?? '',
       password: '',
+      rememberMe: false,
     },
-    validators: {
-      onSubmit: signInSchema,
-    },
-    onSubmit: ({ value }) => {
-      console.log('sign in', value)
+    onSubmit: async ({ value }) => {
+      setSubmitError(null)
+      const { data, error } = await authClient.signIn.email({
+        email: value.email,
+        password: value.password,
+        rememberMe: value.rememberMe,
+      })
+      if (error) {
+        setSubmitError(error.message ?? 'An unexpected error occurred')
+        return
+      }
+      router.invalidate()
+      if (!data.user.emailVerified) {
+        navigate({ to: '/verify-email', search: { email: value.email } })
+        return
+      }
+      navigate({ to: '/' })
     },
   })
 
@@ -33,71 +58,81 @@ function SignInForm() {
       }}
       className="flex flex-col gap-6"
     >
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Sign in</h1>
-        <p className="text-balance text-sm text-muted-foreground">
-          Enter your email below to sign in to your account
-        </p>
-      </div>
+      <FieldGroup>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <TypographyH3>Sign in</TypographyH3>
+          <TypographyMuted className="text-balance">
+            Enter your email below to sign in to your account
+          </TypographyMuted>
+        </div>
 
-      <div className="grid gap-4">
-        <form.Field
-          name="email"
-          validators={{ onChange: z.string().email('Email tidak valid') }}
-        >
-          {(field) => (
-            <FieldInput
-              title="Email"
-              placeholder="you@example.com"
-              error={field.state.meta.errors[0]?.message}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-              onBlur={field.handleBlur}
-            />
+        <div className="grid gap-4">
+          {submitError && (
+            <StatusAlert variant="error" title="Error">
+              {submitError}
+            </StatusAlert>
           )}
-        </form.Field>
 
-        <form.Field
-          name="password"
-          validators={{ onChange: z.string().min(8, 'Minimal 8 karakter') }}
-        >
-          {(field) => (
-            <FieldInput
-              title="Password"
-              type="password"
-              placeholder="Enter your password"
-              error={field.state.meta.errors[0]?.message}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-              onBlur={field.handleBlur}
-            />
-          )}
-        </form.Field>
+          <form.AppField
+            name="email"
+            children={(field) => (
+              <field.FieldInput label="Email" placeholder="you@example.com" />
+            )}
+          />
 
-        <Button type="submit" className="w-full">
-          Sign in
-        </Button>
-      </div>
+          <form.AppField
+            name="password"
+            children={(field) => (
+              <field.FieldInput
+                label="Password"
+                type="password"
+                placeholder="Enter your password"
+              />
+            )}
+          />
 
-      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-        <span className="relative z-10 bg-background px-2 text-muted-foreground">
-          Or continue with
-        </span>
-      </div>
+          <form.AppField
+            name="rememberMe"
+            children={(field) => <field.FieldCheckbox label="Remember me" />}
+          />
 
-      <Button variant="outline" className="w-full" type="button">
-        <FaGithub />
-        Sign in with GitHub
-      </Button>
+          <form.AppForm>
+            <div>
+              <form.SubscribeButton label="Sign in" />
+            </div>
+          </form.AppForm>
+        </div>
 
-      <div className="text-center text-sm">
-        Don&apos;t have an account?{' '}
-        <Link to="/register" className="underline underline-offset-4">
-          Sign up
-        </Link>
-      </div>
+        <FieldSeparator>Or continue with</FieldSeparator>
+
+        <div>
+          <Button variant="outline" className="w-full" type="button">
+            <FaGithub />
+            Sign in with GitHub
+          </Button>
+        </div>
+
+        <div>
+          <TypographyMuted className="text-center">
+            Don&apos;t have an account?{' '}
+            <Link to="/register" className={linkVariants({ variant: 'muted' })}>
+              Sign up
+            </Link>
+          </TypographyMuted>
+          <TypographyMuted className="text-center">
+            Forgot your password?{' '}
+            <Link
+              to="/forgot-password"
+              className={linkVariants({ variant: 'muted' })}
+            >
+              Reset here
+            </Link>
+          </TypographyMuted>
+        </div>
+      </FieldGroup>
     </form>
   )
 }
 
 export { SignInForm }
+export type { SignInFormProps }

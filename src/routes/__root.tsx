@@ -2,22 +2,41 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  redirect,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../assets/styles/global.css?url'
 
+import { Toaster } from 'sonner'
+
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
-import type { getSession } from '#/lib/better-auth/auth.function'
+import { getSession } from '#/lib/better-auth/auth.function'
 
 interface MyRouterContext {
   queryClient: QueryClient
-  session: Awaited<ReturnType<typeof getSession>>
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async ({ location }) => {
+    const session = await getSession()
+
+    if (
+      session?.user &&
+      !session.user.emailVerified &&
+      location.pathname !== '/verify-email' &&
+      location.pathname !== '/verify-email-success'
+    ) {
+      throw redirect({
+        to: '/verify-email',
+        search: { email: session.user.email },
+      })
+    }
+
+    return { session }
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -37,6 +56,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <div id="app">{children}</div>
+        <Toaster richColors />
         <TanStackDevtools
           config={{
             position: 'bottom-right',

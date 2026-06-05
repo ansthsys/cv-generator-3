@@ -8,7 +8,7 @@ export function TypographyH1({
 }: React.ComponentProps<'h1'>) {
   return (
     <h1
-      className={cn('scroll-m-20 text-4xl font-bold tracking-tight', className)}
+      className={cn('scroll-m-20 text-8xl font-bold tracking-tight', className)}
       {...props}
     />
   )

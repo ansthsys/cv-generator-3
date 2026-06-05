@@ -11,6 +11,7 @@ interface FieldInputProps {
   value: string
   onChange: React.ChangeEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>
+  disabled?: boolean
   placeholder?: string
   type?: string
 }

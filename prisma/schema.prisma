@@ -70,3 +70,13 @@ model Verifications {
   @@index([identifier])
   @@map("verifications")
 }
+
+model RateLimits {
+  id          String @id
+  key         String
+  count       Int
+  lastRequest BigInt
+
+  @@unique([key])
+  @@map("rateLimits")
+}

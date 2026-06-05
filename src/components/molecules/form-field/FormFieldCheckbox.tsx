@@ -11,27 +11,20 @@ function FormFieldCheckbox({
 }: {
   label: string
   description?: string | null
-  options: { value: string; label: string }[]
+  options?: { value: string; label: string }[]
   orientation?: FieldCheckboxProps['orientation']
   renderOption?: FieldCheckboxProps['renderOption']
 }) {
-  const field = useFieldContext<string[]>()
+  const field = useFieldContext<boolean | string[]>()
 
   return (
     <FieldCheckbox
       title={label}
       description={description}
       error={field.state.meta.errors[0]?.message}
+      value={field.state.value}
+      onChange={(value) => field.handleChange(value)}
       options={options}
-      checkedValues={field.state.value}
-      onCheckedChange={(value, checked) => {
-        if (checked) {
-          field.pushValue(value)
-        } else {
-          const idx = field.state.value.indexOf(value)
-          if (idx !== -1) field.removeValue(idx)
-        }
-      }}
       orientation={orientation}
       renderOption={renderOption}
     />

@@ -3,15 +3,13 @@ import { routeTree } from './routeTree.gen'
 
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import { getQueryContext } from './lib/tanstack-query/query-provider'
-import { getSession } from './lib/better-auth/auth.function'
 
 export async function getRouter() {
-  const queryContext = getQueryContext()
-  const session = await getSession()
+  const context = getQueryContext()
 
   const router = createTanStackRouter({
     routeTree,
-    context: { queryClient: queryContext.queryClient, session },
+    context,
     scrollRestoration: true,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
@@ -19,7 +17,7 @@ export async function getRouter() {
 
   setupRouterSsrQueryIntegration({
     router,
-    queryClient: queryContext.queryClient,
+    queryClient: context.queryClient,
   })
 
   return router

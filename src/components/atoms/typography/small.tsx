@@ -5,10 +5,10 @@ import { cn } from '#/utils/cn'
 export function TypographySmall({
   className,
   ...props
-}: React.ComponentProps<'small'>) {
+}: React.ComponentProps<'span'>) {
   return (
-    <small
-      className={cn('text-sm font-medium leading-none', className)}
+    <span
+      className={cn('text-xs font-medium leading-none', className)}
       {...props}
     />
   )
