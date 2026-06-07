@@ -1,8 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
 
-import { AuthLayout } from '#/components/templates/AuthLayout'
-import { SignInForm } from '#/components/organisms/auth/SignInForm'
+import { SignInPage } from '#/components/pages/auth/SignInPage'
 
 const loginSearchSchema = z.object({
   email: z.string().optional(),
@@ -13,15 +12,8 @@ export const Route = createFileRoute('/(auth)/login')({
   beforeLoad: ({ context }) => {
     if (context.session?.user) throw redirect({ to: '/' })
   },
-  component: SignInPage,
+  component: () => {
+    const { email } = Route.useSearch()
+    return <SignInPage email={email} />
+  },
 })
-
-function SignInPage() {
-  const { email } = Route.useSearch()
-
-  return (
-    <AuthLayout>
-      <SignInForm initialEmail={email} />
-    </AuthLayout>
-  )
-}

@@ -17,3 +17,12 @@ export async function sendVerificationEmail(to: string, url: string) {
     html: `<a href="${url}">Click here to verify your email</a>`,
   })
 }
+
+export async function sendPasswordResetEmail(to: string, url: string) {
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM,
+    to,
+    subject: 'Reset your password',
+    html: `<a href="${url}">Click here to reset your password</a>`,
+  })
+}

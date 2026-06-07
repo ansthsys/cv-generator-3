@@ -27,7 +27,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       session?.user &&
       !session.user.emailVerified &&
       location.pathname !== '/verify-email' &&
-      location.pathname !== '/verify-email-success'
+      location.pathname !== '/verify-email-success' &&
+      location.pathname !== '/forgot-password' &&
+      location.pathname !== '/reset-password'
     ) {
       throw redirect({
         to: '/verify-email',
