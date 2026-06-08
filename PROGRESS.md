@@ -1,4 +1,4 @@
-# CV Generator 3 — Progress
+﻿# CV Generator 3 — Progress
 
 ## What's been built
 
@@ -18,6 +18,9 @@ Auth flow (login, register, email verification, session management) and supporti
 - Custom `text-lead` class in Tailwind theme for phi step
 - StatusAlert, shadcn Alert, shadcn Card, shadcn Sonner
 - linkVariants CVA for Link styling
+- Heading typography (H1–H4, Large) use `font-heading` (Merriweather Variable)
+- shadcn radix-sera theme applied via `apply --preset` (preset b4dGlY0Nez) — restyled all shadcn UI components (button, card, input, checkbox, etc.) and global.css tokens
+- `cn.ts` migrated to shadcn-generated `utils.ts` + re-export via `#/utils`
 
 ### Form System
 
@@ -34,9 +37,12 @@ Auth flow (login, register, email verification, session management) and supporti
 - Client: `authClient` from `createAuthClient()`
 - Prisma: RateLimits model generated via `auth:generate`, migrated to database
 - Email: nodemailer SMTP transporter (Mailtrap dev), `sendVerificationEmail()`
-- Auth forms: SignInForm (email + password + rememberMe), SignUpForm (name + email + password + confirmPassword)
+- Auth forms: SignInForm (email + password + rememberMe), SignUpForm (name + email + password + confirmPassword), ForgotPasswordForm, ResetPasswordForm, VerifyEmailForm, VerifyEmailSuccess
 - Remember me feature on sign-in (boolean, not passed to signUp.email)
-- Forgot password placeholder route (`(auth)/forgot-password.tsx`)
+- TanStack Query mutation hooks (`hooks/mutation/auth.ts`): signIn, signUp, signOut, forgotPassword, resetPassword, sendVerification
+- Session query (`hooks/query/auth.ts`) via `useSessionQuery()`
+- Query/mutation keys in `lib/tanstack-query/keys.ts`
+- Mutation hooks unwrap `{ data, error }` from authClient and throw on error for TanStack Query error state
 
 ### Session & Middleware
 
@@ -53,10 +59,17 @@ Auth flow (login, register, email verification, session management) and supporti
 ### Layout & Uniformity
 
 - AuthLayout template shared across all auth pages
-- Buttons wrapped in `<div>` for consistency
-- Text links grouped with `text-center` alignment
-- StatusAlert positioned consistently (below title, above form fields)
-- Resend verification text revised to avoid awkward line wraps
+- AuthFormLayout simplified: only `title`, `description`, `children`, `onSubmit`, `gap-10`
+- All 6 auth forms follow unified structure:
+  - StatusAlert langsung sebagai children AuthFormLayout (di luar container fields)
+  - `<div className="space-y-4">` hanya untuk `form.AppField`
+  - `form.SubscribeButton` langsung sebagai children AuthFormLayout
+  - Footer items (FieldSeparator, GitHub button, sign-in/sign-up links) inline langsung
+  - Footer files (`SignInFooter.tsx`, `SignUpFooter.tsx`) deleted
+  - Setiap `form.AppField` tanpa inner `<div>` tambahan
+- `LoadingButton` atom (`atoms/common/LoadingButton`)
+- StatusAlert moved to `molecules/common/StatusAlert` (flat structure, no subfolder)
+- Single-file component folders flattened (no subfolder for single file)
 
 ## What's NOT done (core features)
 
@@ -68,5 +81,5 @@ Auth flow (login, register, email verification, session management) and supporti
 
 ## Known issues
 
-- Build has pre-existing failures (kysely compatibility, unrelated to auth)
+- Build failures at Nitro stage due to pre-existing kysely compatibility issue (`DEFAULT_MIGRATION_LOCK_TABLE` / `DEFAULT_MIGRATION_TABLE`). Client build (2270 modules) and SSR build (228 modules) succeed. Unrelated to UI/auth.
 - Rate limiting might need runtime verification
