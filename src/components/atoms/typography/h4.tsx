@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { cn } from '#/utils/cn'
+import { cn } from '#/utils'
 
 export function TypographyH4({
   className,
@@ -9,7 +9,7 @@ export function TypographyH4({
   return (
     <h4
       className={cn(
-        'scroll-m-20 text-lead font-semibold tracking-tight',
+        'scroll-m-20 text-lead font-semibold font-heading tracking-tight',
         className,
       )}
       {...props}

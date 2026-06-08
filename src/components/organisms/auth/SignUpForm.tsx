@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { FaGithub } from 'react-icons/fa'
 
-import { linkVariants } from '#/components/atoms/typography'
+import { Button } from '#/components/atoms/ui/button'
+import { FieldSeparator } from '#/components/atoms/ui/field'
+import { linkVariants, TypographyMuted } from '#/components/atoms/typography'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
-import { SignUpFooter } from '#/components/molecules/auth-form/SignUpFooter'
 import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 import { registerFormOpts } from '#/lib/form/auth/register'
 import { useAppForm } from '#/hooks/useAppForm'
@@ -38,7 +40,6 @@ function SignUpForm() {
         e.preventDefault()
         form.handleSubmit()
       }}
-      footer={<SignUpFooter />}
     >
       {existingEmail && (
         <StatusAlert variant="error" title="Email already registered">
@@ -52,49 +53,70 @@ function SignUpForm() {
           </Link>
         </StatusAlert>
       )}
+
       {signUpMutation.isError && !existingEmail && (
         <StatusAlert variant="error" title="Error">
           {signUpMutation.error.message}
         </StatusAlert>
       )}
 
-      <form.AppField name="name">
-        {(field) => (
-          <field.FieldInput label="Full Name" placeholder="John Doe" />
-        )}
-      </form.AppField>
+      <div className="space-y-4">
+        <form.AppField name="name">
+          {(field) => (
+            <field.FieldInput label="Full Name" placeholder="John Doe" />
+          )}
+        </form.AppField>
 
-      <form.AppField name="email">
-        {(field) => (
-          <field.FieldInput label="Email" placeholder="you@example.com" />
-        )}
-      </form.AppField>
+        <form.AppField name="email">
+          {(field) => (
+            <field.FieldInput label="Email" placeholder="you@example.com" />
+          )}
+        </form.AppField>
 
-      <form.AppField name="password">
-        {(field) => (
-          <field.FieldInput
-            label="Password"
-            type="password"
-            placeholder="At least 8 characters"
-          />
-        )}
-      </form.AppField>
+        <form.AppField name="password">
+          {(field) => (
+            <field.FieldInput
+              label="Password"
+              type="password"
+              placeholder="At least 8 characters"
+            />
+          )}
+        </form.AppField>
 
-      <form.AppField name="confirmPassword">
-        {(field) => (
-          <field.FieldInput
-            label="Confirm Password"
-            type="password"
-            placeholder="Re-enter your password"
-          />
-        )}
-      </form.AppField>
+        <form.AppField name="confirmPassword">
+          {(field) => (
+            <field.FieldInput
+              label="Confirm Password"
+              type="password"
+              placeholder="Re-enter your password"
+            />
+          )}
+        </form.AppField>
+      </div>
 
       <form.AppForm>
         <div className="w-full">
           <form.SubscribeButton label="Create account" className="w-full" />
         </div>
       </form.AppForm>
+
+      <FieldSeparator>Or continue with</FieldSeparator>
+
+      <div className="w-full">
+        <Button variant="outline" className="w-full" type="button">
+          <FaGithub />
+          Sign up with GitHub
+        </Button>
+      </div>
+
+      <div className="w-full">
+        <TypographyMuted className="text-center">
+          Already have an account?{' '}
+          <Link to="/login" className={linkVariants({ variant: 'muted' })}>
+            Sign in
+          </Link>
+        </TypographyMuted>
+      </div>
     </AuthFormLayout>
   )
 }

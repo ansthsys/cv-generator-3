@@ -1,7 +1,10 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { FaGithub } from 'react-icons/fa'
 
+import { Button } from '#/components/atoms/ui/button'
+import { FieldSeparator } from '#/components/atoms/ui/field'
+import { linkVariants, TypographyMuted } from '#/components/atoms/typography'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
-import { SignInFooter } from '#/components/molecules/auth-form/SignInFooter'
 import { loginFormOpts } from '#/lib/form/auth/login'
 import { useAppForm } from '#/hooks/useAppForm'
 import { useSignInMutation } from '#/hooks/mutation/auth'
@@ -40,15 +43,14 @@ function SignInForm({ initialEmail }: SignInFormProps) {
         e.preventDefault()
         form.handleSubmit()
       }}
-      footer={<SignInFooter />}
     >
-      <div className="grid gap-4">
-        {signInMutation.isError && (
-          <StatusAlert variant="error" title="Error">
-            {signInMutation.error.message}
-          </StatusAlert>
-        )}
+      {signInMutation.isError && (
+        <StatusAlert variant="error" title="Error">
+          {signInMutation.error.message}
+        </StatusAlert>
+      )}
 
+      <div className="space-y-4">
         <form.AppField
           name="email"
           children={(field) => (
@@ -71,12 +73,39 @@ function SignInForm({ initialEmail }: SignInFormProps) {
           name="rememberMe"
           children={(field) => <field.FieldCheckbox label="Remember me" />}
         />
+      </div>
 
-        <form.AppForm>
-          <div className="w-full">
-            <form.SubscribeButton label="Sign in" className="w-full" />
-          </div>
-        </form.AppForm>
+      <form.AppForm>
+        <div className="w-full">
+          <form.SubscribeButton label="Sign in" className="w-full" />
+        </div>
+      </form.AppForm>
+
+      <FieldSeparator>Or continue with</FieldSeparator>
+
+      <div className="w-full">
+        <Button variant="outline" className="w-full" type="button">
+          <FaGithub />
+          Sign in with GitHub
+        </Button>
+      </div>
+
+      <div className="w-full">
+        <TypographyMuted className="text-center">
+          Don&apos;t have an account?{' '}
+          <Link to="/register" className={linkVariants({ variant: 'muted' })}>
+            Sign up
+          </Link>
+        </TypographyMuted>
+        <TypographyMuted className="text-center">
+          Forgot your password?{' '}
+          <Link
+            to="/forgot-password"
+            className={linkVariants({ variant: 'muted' })}
+          >
+            Reset here
+          </Link>
+        </TypographyMuted>
       </div>
     </AuthFormLayout>
   )

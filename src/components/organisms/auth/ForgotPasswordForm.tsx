@@ -20,12 +20,10 @@ function ForgotPasswordForm() {
         title="Check your email"
         description="If an account with that email exists, we have sent a password reset link."
       >
-        <div className="flex justify-center">
-          <StatusAlert variant="success" title="Email sent">
-            Please check your inbox and follow the instructions to reset your
-            password.
-          </StatusAlert>
-        </div>
+        <StatusAlert variant="success" title="Email sent">
+          Please check your inbox and follow the instructions to reset your
+          password.
+        </StatusAlert>
       </AuthFormLayout>
     )
   }
@@ -45,12 +43,14 @@ function ForgotPasswordForm() {
         </StatusAlert>
       )}
 
-      <form.AppField
-        name="email"
-        children={(field) => (
-          <field.FieldInput label="Email" placeholder="you@example.com" />
-        )}
-      />
+      <div className="space-y-4">
+        <form.AppField
+          name="email"
+          children={(field) => (
+            <field.FieldInput label="Email" placeholder="you@example.com" />
+          )}
+        />
+      </div>
 
       <form.AppForm>
         <div className="w-full">

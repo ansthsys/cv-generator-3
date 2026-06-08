@@ -55,27 +55,29 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         </StatusAlert>
       )}
 
-      <form.AppField
-        name="password"
-        children={(field) => (
-          <field.FieldInput
-            label="New Password"
-            type="password"
-            placeholder="At least 8 characters"
-          />
-        )}
-      />
+      <div className="space-y-4">
+        <form.AppField
+          name="password"
+          children={(field) => (
+            <field.FieldInput
+              label="New Password"
+              type="password"
+              placeholder="At least 8 characters"
+            />
+          )}
+        />
 
-      <form.AppField
-        name="confirmPassword"
-        children={(field) => (
-          <field.FieldInput
-            label="Confirm New Password"
-            type="password"
-            placeholder="Re-enter your new password"
-          />
-        )}
-      />
+        <form.AppField
+          name="confirmPassword"
+          children={(field) => (
+            <field.FieldInput
+              label="Confirm New Password"
+              type="password"
+              placeholder="Re-enter your new password"
+            />
+          )}
+        />
+      </div>
 
       <form.AppForm>
         <div className="w-full">

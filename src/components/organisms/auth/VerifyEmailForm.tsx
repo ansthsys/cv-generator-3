@@ -52,36 +52,30 @@ function VerifyEmailForm({ email }: VerifyEmailFormProps) {
         </StatusAlert>
       )}
 
-      <div className="w-full">
-        <TypographyMuted className="mb-3">
-          Didn't receive the email? Check your spam folder or make sure you
-          entered the correct email address.
-        </TypographyMuted>
+      <TypographyMuted>
+        Didn&apos;t receive the email? Check your spam folder or make sure you
+        entered the correct email address.
+      </TypographyMuted>
 
-        <div>
-          <LoadingButton
-            onClick={handleResend}
-            isLoading={sendVerification.isPending}
-            loadingText="Sending..."
-            className="w-full"
-          >
-            Resend verification email
-          </LoadingButton>
-        </div>
-      </div>
+      <LoadingButton
+        onClick={handleResend}
+        isLoading={sendVerification.isPending}
+        loadingText="Sending..."
+        className="w-full"
+      >
+        Resend verification email
+      </LoadingButton>
 
-      <div>
-        <LoadingButton
-          variant="outline"
-          onClick={() => signOut.mutate()}
-          isLoading={signOut.isPending}
-          loadingText="Signing out..."
-          className="w-full"
-        >
-          <LogOutIcon className="size-4" />
-          Log out
-        </LoadingButton>
-      </div>
+      <LoadingButton
+        variant="outline"
+        onClick={() => signOut.mutate()}
+        isLoading={signOut.isPending}
+        loadingText="Signing out..."
+        className="w-full"
+      >
+        <LogOutIcon className="size-4" />
+        Log out
+      </LoadingButton>
     </AuthFormLayout>
   )
 }

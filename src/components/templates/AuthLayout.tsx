@@ -16,7 +16,7 @@ function AuthLayout({ children }: AuthLayoutProps) {
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-      <div className="bg-white flex flex-col gap-4 p-6 md:p-10 col-span-12 lg:col-span-6 xl:col-span-5">
+      <div className="bg-white flex flex-col gap-8 p-6 md:p-10 col-span-12 lg:col-span-6 xl:col-span-5">
         <div className="flex justify-start gap-2">
           <Link to="/" className="flex items-center gap-2 font-medium">
             <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">

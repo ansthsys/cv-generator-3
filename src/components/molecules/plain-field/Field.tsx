@@ -31,7 +31,7 @@ function Field({ title, description, error, children }: FieldProps) {
       data-slot="field"
       data-invalid={!!error}
       role="group"
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-1.5"
     >
       <FieldLabel htmlFor={id}>{title}</FieldLabel>
       {description && (

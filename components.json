@@ -1,12 +1,12 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "radix-vega",
+  "style": "radix-sera",
   "rsc": false,
   "tsx": true,
   "tailwind": {
     "config": "",
     "css": "src/assets/styles/global.css",
-    "baseColor": "mist",
+    "baseColor": "taupe",
     "cssVariables": true,
     "prefix": ""
   },
@@ -14,12 +14,12 @@
     "ui": "#/components/atoms/ui",
     "components": "#/components/organisms",
     "utils": "#/utils",
-    "lib": "#/lib",
+    "lib": "#/utils",
     "hooks": "#/hooks"
   },
   "iconLibrary": "lucide",
   "rtl": false,
-  "menuColor": "default-translucent",
-  "menuAccent": "subtle",
+  "menuColor": "inverted",
+  "menuAccent": "bold",
   "registries": {}
 }
