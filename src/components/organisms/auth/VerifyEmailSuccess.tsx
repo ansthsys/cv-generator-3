@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { Button } from '#/components/atoms/ui/button'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
 
 function VerifyEmailSuccess() {

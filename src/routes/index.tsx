@@ -1,9 +1,11 @@
 import { z } from 'zod'
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
-import { LogOutIcon } from 'lucide-react'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { LogOutIcon, LoaderCircleIcon } from 'lucide-react'
 
 import { Button } from '#/components/atoms/ui/button'
-import { authClient } from '#/lib/better-auth/auth-client'
+import { LoadingButton } from '#/components/atoms/common/LoadingButton'
+import { useSignOutMutation } from '#/hooks/mutation/auth'
+import { useSessionQuery } from '#/hooks/query/auth'
 import {
   TypographyH1,
   TypographyH2,
@@ -37,8 +39,8 @@ const planOptions = [
 ]
 
 function Home() {
-  const router = useRouter()
-  const { session } = Route.useRouteContext()
+  const signOutMutation = useSignOutMutation()
+  const { data: session, isPending } = useSessionQuery()
   const form = useAppForm({
     defaultValues: {
       name: '',
@@ -64,9 +66,8 @@ function Home() {
     },
   })
 
-  async function handleLogout() {
-    await authClient.signOut()
-    router.invalidate()
+  function handleLogout() {
+    signOutMutation.mutate()
   }
 
   return (
@@ -75,13 +76,21 @@ function Home() {
         <TypographyMuted className="text-sm font-medium">
           CV Generator 3
         </TypographyMuted>
-        {session?.user ? (
+        {isPending ? (
+          <LoaderCircleIcon className="size-4 animate-spin text-muted-foreground" />
+        ) : session?.user ? (
           <div className="flex items-center gap-3">
             <TypographySmall>{session.user.email}</TypographySmall>
-            <Button variant="outline" size="sm" onClick={handleLogout}>
+            <LoadingButton
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              isLoading={signOutMutation.isPending}
+              loadingText="Signing out..."
+            >
               <LogOutIcon className="size-4" />
               Log out
-            </Button>
+            </LoadingButton>
           </div>
         ) : (
           <div className="flex items-center gap-2">

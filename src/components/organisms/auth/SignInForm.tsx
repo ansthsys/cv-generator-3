@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
 import { SignInFooter } from '#/components/molecules/auth-form/SignInFooter'
-import { authClient } from '#/lib/better-auth/auth-client'
 import { loginFormOpts } from '#/lib/form/auth/login'
 import { useAppForm } from '#/hooks/useAppForm'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
+import { useSignInMutation } from '#/hooks/mutation/auth'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 
 interface SignInFormProps {
   initialEmail?: string
@@ -14,8 +13,7 @@ interface SignInFormProps {
 
 function SignInForm({ initialEmail }: SignInFormProps) {
   const navigate = useNavigate()
-  const router = useRouter()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const signInMutation = useSignInMutation()
 
   const form = useAppForm({
     ...loginFormOpts,
@@ -25,18 +23,8 @@ function SignInForm({ initialEmail }: SignInFormProps) {
       rememberMe: false,
     },
     onSubmit: async ({ value }) => {
-      setSubmitError(null)
-      const { data, error } = await authClient.signIn.email({
-        email: value.email,
-        password: value.password,
-        rememberMe: value.rememberMe,
-      })
-      if (error) {
-        setSubmitError(error.message ?? 'An unexpected error occurred')
-        return
-      }
-      router.invalidate()
-      if (!data.user.emailVerified) {
+      const session = await signInMutation.mutateAsync(value)
+      if (!session.user.emailVerified) {
         navigate({ to: '/verify-email', search: { email: value.email } })
         return
       }
@@ -55,9 +43,9 @@ function SignInForm({ initialEmail }: SignInFormProps) {
       footer={<SignInFooter />}
     >
       <div className="grid gap-4">
-        {submitError && (
+        {signInMutation.isError && (
           <StatusAlert variant="error" title="Error">
-            {submitError}
+            {signInMutation.error.message}
           </StatusAlert>
         )}
 

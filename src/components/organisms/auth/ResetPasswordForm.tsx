@@ -1,38 +1,27 @@
-import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
 import { Button } from '#/components/atoms/ui/button'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
-import { authClient } from '#/lib/better-auth/auth-client'
 import { resetPasswordFormOpts } from '#/lib/form/auth/reset-password'
 import { useAppForm } from '#/hooks/useAppForm'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
+import { useResetPasswordMutation } from '#/hooks/mutation/auth'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 
 interface ResetPasswordFormProps {
   token: string
 }
 
 function ResetPasswordForm({ token }: ResetPasswordFormProps) {
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const resetPasswordMutation = useResetPasswordMutation(token)
 
   const form = useAppForm({
     ...resetPasswordFormOpts,
     onSubmit: async ({ value }) => {
-      setSubmitError(null)
-      const { error } = await authClient.resetPassword({
-        newPassword: value.password,
-        token,
-      })
-      if (error) {
-        setSubmitError(error.message ?? 'An unexpected error occurred')
-        return
-      }
-      setIsSuccess(true)
+      await resetPasswordMutation.mutateAsync(value)
     },
   })
 
-  if (isSuccess) {
+  if (resetPasswordMutation.isSuccess) {
     return (
       <AuthFormLayout
         title="Password reset"
@@ -60,9 +49,9 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         form.handleSubmit()
       }}
     >
-      {submitError && (
+      {resetPasswordMutation.isError && (
         <StatusAlert variant="error" title="Error">
-          {submitError}
+          {resetPasswordMutation.error.message}
         </StatusAlert>
       )}
 

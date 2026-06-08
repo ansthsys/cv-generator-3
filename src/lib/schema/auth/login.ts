@@ -5,3 +5,5 @@ export const loginSchema = z.object({
   password: z.string().min(8, 'At least 8 characters'),
   rememberMe: z.boolean(),
 })
+
+export type LoginSchema = z.infer<typeof loginSchema>

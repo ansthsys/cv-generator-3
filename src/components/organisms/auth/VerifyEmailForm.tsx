@@ -1,44 +1,26 @@
-import { useState } from 'react'
-import { Link, useRouter } from '@tanstack/react-router'
-import { LoaderCircleIcon, LogOutIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { LogOutIcon } from 'lucide-react'
 
-import { Button } from '#/components/atoms/ui/button'
+import { LoadingButton } from '#/components/atoms/common/LoadingButton'
 import { TypographyMuted, linkVariants } from '#/components/atoms/typography'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
-import { authClient } from '#/lib/better-auth/auth-client'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
+import {
+  useSignOutMutation,
+  useSendVerificationMutation,
+} from '#/hooks/mutation/auth'
 
 interface VerifyEmailFormProps {
   email?: string
 }
 
 function VerifyEmailForm({ email }: VerifyEmailFormProps) {
-  const router = useRouter()
-  const [status, setStatus] = useState<
-    'idle' | 'sending' | 'sent' | 'no-session'
-  >('idle')
+  const sendVerification = useSendVerificationMutation()
+  const signOut = useSignOutMutation()
 
-  async function handleResend() {
+  function handleResend() {
     if (!email) return
-
-    setStatus('sending')
-
-    const { error } = await authClient.sendVerificationEmail({
-      email,
-      callbackURL: '/verify-email-success',
-    })
-
-    if (error) {
-      setStatus('no-session')
-      return
-    }
-
-    setStatus('sent')
-  }
-
-  async function handleLogout() {
-    await authClient.signOut()
-    router.invalidate()
+    sendVerification.mutate(email)
   }
 
   return (
@@ -50,13 +32,13 @@ function VerifyEmailForm({ email }: VerifyEmailFormProps) {
           : 'If this is a new account, a verification link has been sent. The link is valid for 24 hours.'
       }
     >
-      {status === 'sent' && (
+      {sendVerification.isSuccess && (
         <StatusAlert variant="success" title="Verification sent">
           A new verification link has been sent. Please check your inbox.
         </StatusAlert>
       )}
 
-      {status === 'no-session' && (
+      {sendVerification.isError && (
         <StatusAlert variant="error" title="Session expired">
           Please{' '}
           <Link
@@ -77,24 +59,28 @@ function VerifyEmailForm({ email }: VerifyEmailFormProps) {
         </TypographyMuted>
 
         <div>
-          <Button
+          <LoadingButton
             onClick={handleResend}
-            disabled={status === 'sending'}
+            isLoading={sendVerification.isPending}
+            loadingText="Sending..."
             className="w-full"
           >
-            {status === 'sending' && (
-              <LoaderCircleIcon className="size-4 animate-spin" />
-            )}
-            {status === 'sending' ? 'Sending...' : 'Resend verification email'}
-          </Button>
+            Resend verification email
+          </LoadingButton>
         </div>
       </div>
 
       <div>
-        <Button variant="outline" onClick={handleLogout} className="w-full">
+        <LoadingButton
+          variant="outline"
+          onClick={() => signOut.mutate()}
+          isLoading={signOut.isPending}
+          loadingText="Signing out..."
+          className="w-full"
+        >
           <LogOutIcon className="size-4" />
           Log out
-        </Button>
+        </LoadingButton>
       </div>
     </AuthFormLayout>
   )

@@ -1,21 +1,14 @@
 import type { ComponentProps } from 'react'
-import { LoaderCircleIcon } from 'lucide-react'
 
 import { useFormContext } from '#/hooks/useFormContext'
-import { Button } from '#/components/atoms/ui/button'
+import { LoadingButton } from '#/components/atoms/common/LoadingButton'
 
 function FormSubscribeButton({
   label,
-  variant,
-  size,
-  className,
-  disabled,
   ...props
 }: {
   label?: string
-  variant?: ComponentProps<typeof Button>['variant']
-  size?: ComponentProps<typeof Button>['size']
-} & Omit<ComponentProps<typeof Button>, 'variant' | 'size'>) {
+} & Omit<ComponentProps<typeof LoadingButton>, 'isLoading' | 'loadingText'>) {
   const form = useFormContext()
 
   return (
@@ -26,17 +19,14 @@ function FormSubscribeButton({
       })}
     >
       {({ canSubmit, isSubmitting }) => (
-        <Button
+        <LoadingButton
           type="submit"
-          variant={variant}
-          size={size}
-          className={className}
-          disabled={disabled || !canSubmit || isSubmitting}
+          isLoading={isSubmitting}
+          disabled={props.disabled || !canSubmit}
           {...props}
         >
-          {isSubmitting && <LoaderCircleIcon className="animate-spin" />}
-          {isSubmitting ? 'Loading' : (label ?? 'Submit')}
-        </Button>
+          {label ?? 'Submit'}
+        </LoadingButton>
       )}
     </form.Subscribe>
   )

@@ -1,32 +1,20 @@
-import { useState } from 'react'
-
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
-import { authClient } from '#/lib/better-auth/auth-client'
 import { forgotPasswordFormOpts } from '#/lib/form/auth/forgot-password'
 import { useAppForm } from '#/hooks/useAppForm'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
+import { useForgotPasswordMutation } from '#/hooks/mutation/auth'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 
 function ForgotPasswordForm() {
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const forgotPasswordMutation = useForgotPasswordMutation()
 
   const form = useAppForm({
     ...forgotPasswordFormOpts,
     onSubmit: async ({ value }) => {
-      setSubmitError(null)
-      const { error } = await authClient.requestPasswordReset({
-        email: value.email,
-        redirectTo: '/reset-password',
-      })
-      if (error) {
-        setSubmitError(error.message ?? 'An unexpected error occurred')
-        return
-      }
-      setIsSubmitted(true)
+      await forgotPasswordMutation.mutateAsync(value)
     },
   })
 
-  if (isSubmitted) {
+  if (forgotPasswordMutation.isSuccess) {
     return (
       <AuthFormLayout
         title="Check your email"
@@ -51,9 +39,9 @@ function ForgotPasswordForm() {
         form.handleSubmit()
       }}
     >
-      {submitError && (
+      {forgotPasswordMutation.isError && (
         <StatusAlert variant="error" title="Error">
-          {submitError}
+          {forgotPasswordMutation.error.message}
         </StatusAlert>
       )}
 

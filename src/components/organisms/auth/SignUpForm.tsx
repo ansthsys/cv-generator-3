@@ -1,40 +1,32 @@
 import { useState } from 'react'
-import { Link, useNavigate, useRouter } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 
 import { linkVariants } from '#/components/atoms/typography'
 import { AuthFormLayout } from '#/components/molecules/auth-form/AuthFormLayout'
 import { SignUpFooter } from '#/components/molecules/auth-form/SignUpFooter'
-import { StatusAlert } from '#/components/molecules/status-alert/StatusAlert'
-import { authClient } from '#/lib/better-auth/auth-client'
+import { StatusAlert } from '#/components/molecules/common/StatusAlert'
 import { registerFormOpts } from '#/lib/form/auth/register'
 import { useAppForm } from '#/hooks/useAppForm'
+import { useSignUpMutation } from '#/hooks/mutation/auth'
 
 function SignUpForm() {
   const navigate = useNavigate()
-  const router = useRouter()
+  const signUpMutation = useSignUpMutation()
   const [existingEmail, setExistingEmail] = useState<string | null>(null)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const form = useAppForm({
     ...registerFormOpts,
     onSubmit: async ({ value }) => {
       setExistingEmail(null)
-      setSubmitError(null)
-      const { error } = await authClient.signUp.email({
-        name: value.name,
-        email: value.email,
-        password: value.password,
-      })
-      if (error) {
-        if (error.message?.toLowerCase().includes('user already exists')) {
+      try {
+        await signUpMutation.mutateAsync(value)
+        navigate({ to: '/verify-email', search: { email: value.email } })
+      } catch (error) {
+        const err = error as { message?: string }
+        if (err.message?.toLowerCase().includes('user already exists')) {
           setExistingEmail(value.email)
-          return
         }
-        setSubmitError(error.message ?? 'An unexpected error occurred')
-        return
       }
-      router.invalidate()
-      navigate({ to: '/verify-email', search: { email: value.email } })
     },
   })
 
@@ -60,9 +52,9 @@ function SignUpForm() {
           </Link>
         </StatusAlert>
       )}
-      {submitError && (
+      {signUpMutation.isError && !existingEmail && (
         <StatusAlert variant="error" title="Error">
-          {submitError}
+          {signUpMutation.error.message}
         </StatusAlert>
       )}
 

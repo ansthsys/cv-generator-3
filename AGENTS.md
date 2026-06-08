@@ -18,6 +18,8 @@
 - Component files: PascalCase (`Button.tsx`, `UserCard.tsx`)
 - Folder names: kebab-case (`plain-field/`, `tanstack-query/`, `better-auth/`)
 - Utility files: kebab-case (`format-date.ts`, `cn.ts`)
+- Common/shared atoms (like `LoadingButton`) go directly in `atoms/common/`
+- Common/shared molecules (like `StatusAlert`) go directly in `molecules/common/`
 - Use `#/` path alias for all imports (e.g. `#/components/atoms/Button`)
 
 ## Shadcn
@@ -46,13 +48,36 @@
 
 ## Git & Commits
 
-- Use conventional commits: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`
+- Use conventional commits without scope: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`
 - Husky + lint-staged will auto-lint and format staged files on commit.
 
 ## Testing
 
 - Write tests using Vitest + Testing Library.
 - Test files should be co-located: `Button.test.tsx` next to `Button.tsx`.
+
+## TanStack Query
+
+- Query hooks in `hooks/query/<domain>.ts` (e.g. `hooks/query/auth.ts`).
+  Named `useXxxQuery`, exported individually.
+- Mutation hooks in `hooks/mutation/<domain>.ts` (e.g. `hooks/mutation/auth.ts`).
+  Named `useXxxMutation`, exported individually.
+- Query and mutation keys in `lib/tanstack-query/keys.ts`.
+  Key structure: domain-separated private variables (e.g. `cvKeys`, `authMutationKeys`)
+  with `all` as anchor, merged into exported `queryKeys` / `mutationKeys` objects.
+  Use spread from `all` for child keys to keep them DRY.
+  Use `as const` tuples for static keys, factory functions for parameterized keys
+  (e.g. `detail: (id: string) => [...cvKeys.all, 'detail', id]`).
+- Schema inferred types (`export type LoginSchema = z.infer<typeof loginSchema>`)
+  defined inside each schema file, not in hooks.
+- Mutation functions must unwrap better-auth's `{ data, error }` response
+  and throw on error to leverage TanStack Query's error state.
+
+## opencode.json
+
+- `opencode.json` contains MCP server configurations.
+- MCP `better-auth` is configured there — always use the MCP tools (`better-auth_search_docs`, `better-auth_get_doc`) for better-auth questions. Do NOT use `websearch`/`webfetch` for better-auth docs.
+- Check `opencode.json` before using external search tools.
 
 ## State & Data
 
