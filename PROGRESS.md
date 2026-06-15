@@ -71,15 +71,35 @@ Auth flow (login, register, email verification, session management) and supporti
 - StatusAlert moved to `molecules/common/StatusAlert` (flat structure, no subfolder)
 - Single-file component folders flattened (no subfolder for single file)
 
-## What's NOT done (core features)
+### Data Layer (Phase 2 — Complete)
 
-- CV builder forms (education, experience, skills, projects)
-- CV template rendering / PDF export
-- User dashboard
+- `src/lib/server/cv.ts` — all CV CRUD server functions via `createServerFn` + `.inputValidator()`:
+  - CV: list, get (with all relations), create, update, delete
+  - PersonalDetail: get, upsert
+  - Experience: list, create, update, delete, reorder
+  - Education: list, create, update, delete, reorder
+  - Skill: list, create, update, delete, reorder
+  - Project: list, create, update, delete, reorder
+  - Certificate: list, create, update, delete, reorder
+  - Award: list, create, update, delete, reorder
+  - Organization: list, create, update, delete, reorder
+  - SocialLink: list, create, update, delete, reorder
+- TanStack Query hooks: query hooks (`hooks/query/cv.ts`) + mutation hooks (`hooks/mutation/cv.ts`) for all 10 domains
+- Query/mutation keys in `lib/tanstack-query/keys.ts` — nested `['cv', cvId, 'domain']` convention so `invalidateQueries(['cv', cvId])` cascades to all sub-resources
+- Zod form schemas in `lib/schema/cv.ts` — adapted from generated `prisma-zod` input schemas with string date coercion
+- Routes:
+  - `/dashboard` — list CVs, create new, delete
+  - `/cv/$cvId/edit` — CV editor with all sections (PersonalDetail form, Experience/Education/Skill add+delete, Project/Certificate/Award/Organization/SocialLink list+delete)
+
+## What's NOT done
+
+- CV template rendering / PDF export (Phase 3)
+- Full UI polish — basic HTML forms, user said they'll adjust UI later
+- Drag-and-drop reordering (server functions exist, UI not built)
 - Profile management
-- Any domain-specific business logic
 
 ## Known issues
 
 - Build failures at Nitro stage due to pre-existing kysely compatibility issue (`DEFAULT_MIGRATION_LOCK_TABLE` / `DEFAULT_MIGRATION_TABLE`). Client build (2270 modules) and SSR build (228 modules) succeed. Unrelated to UI/auth.
 - Rate limiting might need runtime verification
+- 1310 eslint errors from generated files in `src/generated/` (outdated project config)
