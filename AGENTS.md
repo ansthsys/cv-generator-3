@@ -152,3 +152,8 @@ lib/
 - One file per domain in each layer (kebab-case filenames).
 - Use `import type` for type-only imports between layers.
 - Service functions that check ownership should prefix with `getUser*`, `createUser*`, etc. to signal they enforce user ownership.
+
+## Session Start
+
+At the start of each new session, read TIMELINE.md and PROGRESS.md
+first to understand the current status and project roadmap.
