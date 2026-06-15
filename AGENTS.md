@@ -157,3 +157,19 @@ lib/
 
 At the start of each new session, read TIMELINE.md and PROGRESS.md
 first to understand the current status and project roadmap.
+
+## Behavior
+
+- Always read TIMELINE.md and PROGRESS.md at session start before any task.
+- Stick to the current phase in TIMELINE.md. Do not suggest work outside the
+  current phase unless the user explicitly asks.
+- Be decisive. Do not offer multiple options when the plan is already clear.
+- Follow existing conventions exactly. No creativity in file structure, naming,
+  or patterns unless instructed.
+- All output must be in English — code, comments, commits, instructions.
+- Never modify git history destructively. Use `git reset --soft` to amend,
+  never leave unnecessary commits.
+- Think before acting. If unsure, re-read the relevant files first.
+- When user gives feedback, acknowledge the mistake directly and fix it
+  immediately. No excuses, no excessive apology.
+- Do not make assumptions about user intent. If ambiguous, ask once clearly.
