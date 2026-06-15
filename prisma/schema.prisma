@@ -4,6 +4,12 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../src/generated/zod"
+  config   = "./config.json"
+}
+
 datasource db {
   provider = "postgresql"
 }
@@ -79,4 +85,264 @@ model RateLimits {
 
   @@unique([key])
   @@map("rateLimits")
+}
+
+enum EducationLevel {
+  SD
+  SMP
+  SMA
+  SMK
+  D3
+  S1
+  S2
+  S3
+
+  @@map("education_level")
+}
+
+enum ExperienceType {
+  KONTRAK
+  PENUH_WAKTU
+  PARUH_WAKTU
+  PEKERJA_LEPAS
+  MAGANG
+
+  @@map("experience_type")
+}
+
+model CvTemplate {
+  id         String   @id @default(cuid())
+  name       String
+  component  String
+  previewUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("cv_templates")
+}
+
+model Cv {
+  id         String   @id @default(cuid())
+  userId     String
+
+  /// @zod.min(1, "CV name is required")
+  name       String
+  isPublic   Boolean  @default(false)
+  config     Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  personalDetail PersonalDetail?
+  experiences    Experience[]
+  educations     Education[]
+  projects       Project[]
+  skills         Skill[]
+  certificates   Certificate[]
+  awards         Award[]
+  organizations  Organization[]
+  socialLinks    SocialLink[]
+
+  @@index([userId])
+  @@map("cvs")
+}
+
+model PersonalDetail {
+  id        String   @id @default(cuid())
+  cvId      String   @unique
+
+  /// @zod.min(1, "Full name is required")
+  fullName  String
+
+  /// @zod.min(1, "Phone is required")
+  phone     String
+
+  /// @zod.email("Invalid email")
+  email     String
+
+  photoUrl  String?
+  city      String?
+  summary   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@map("personal_details")
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  cvId      String
+
+  /// @zod.min(1, "Label is required")
+  label     String
+
+  /// @zod.url("Invalid URL")
+  url       String
+
+  sortOrder Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("social_links")
+}
+
+model Experience {
+  id          String         @id @default(cuid())
+  cvId        String
+
+  /// @zod.min(1, "Title is required")
+  title       String
+
+  /// @zod.min(1, "Company is required")
+  company     String
+
+  type        ExperienceType
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean        @default(false)
+  description String?
+  sortOrder   Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("experiences")
+}
+
+model Education {
+  id           String         @id @default(cuid())
+  cvId         String
+  level        EducationLevel
+
+  /// @zod.min(1, "Institution is required")
+  institution  String
+
+  fieldOfStudy String?
+  gpa          Decimal?       @db.Decimal(3, 2)
+  startDate    DateTime
+  endDate      DateTime?
+  isCurrent    Boolean        @default(false)
+  description  String?
+  sortOrder    Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("educations")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  cvId        String
+
+  /// @zod.min(1, "Project name is required")
+  name        String
+
+  url         String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean  @default(false)
+  description String?
+  sortOrder   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("projects")
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  cvId        String
+
+  /// @zod.min(1, "Skill name is required")
+  name        String
+
+  level     String?
+  sortOrder Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("skills")
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  cvId      String
+
+  /// @zod.min(1, "Certificate name is required")
+  name      String
+
+  /// @zod.min(1, "Organization is required")
+  organization String
+
+  date         DateTime
+  description  String?
+  sortOrder    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("certificates")
+}
+
+model Award {
+  id           String   @id @default(cuid())
+  cvId         String
+
+  /// @zod.min(1, "Title is required")
+  title        String
+
+  /// @zod.min(1, "Organization is required")
+  organization String
+
+  date         DateTime
+  description  String?
+  sortOrder    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("awards")
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  cvId        String
+
+  /// @zod.min(1, "Organization name is required")
+  name        String
+
+  /// @zod.min(1, "Role is required")
+  role        String
+
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean  @default(false)
+  description String?
+  sortOrder   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cv Cv @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@index([cvId])
+  @@map("organizations")
 }

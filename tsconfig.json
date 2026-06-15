@@ -7,6 +7,8 @@
     "vite.config.js"
   ],
 
+  "exclude": ["src/generated/zod"],
+
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
