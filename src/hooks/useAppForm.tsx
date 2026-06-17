@@ -8,6 +8,7 @@ import {
   FormFieldSelect,
   FormFieldCheckbox,
   FormFieldRadioGroup,
+  FormFieldDate,
   FormSubscribeButton,
 } from '#/components/molecules/form-field'
 
@@ -18,6 +19,7 @@ export const { useAppForm } = createFormHook({
     FieldSelect: FormFieldSelect,
     FieldCheckbox: FormFieldCheckbox,
     FieldRadioGroup: FormFieldRadioGroup,
+    FieldDate: FormFieldDate,
   },
   formComponents: {
     SubscribeButton: FormSubscribeButton,

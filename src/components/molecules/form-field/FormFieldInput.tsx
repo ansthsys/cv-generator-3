@@ -6,11 +6,13 @@ function FormFieldInput({
   placeholder,
   type,
   description,
+  disabled,
 }: {
   label: string
   placeholder?: string
   type?: string
   description?: string | null
+  disabled?: boolean
 }) {
   const field = useFieldContext<string>()
 
@@ -22,6 +24,7 @@ function FormFieldInput({
       description={description}
       value={field.state.value}
       error={field.state.meta.errors[0]?.message}
+      disabled={disabled}
       onChange={(e) => field.handleChange(e.target.value)}
       onBlur={() => field.handleBlur()}
     />

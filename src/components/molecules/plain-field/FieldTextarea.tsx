@@ -12,6 +12,7 @@ interface FieldTextareaProps {
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>
   placeholder?: string
+  disabled?: boolean
   rows?: number
 }
 

@@ -5,11 +5,13 @@ function FormFieldTextarea({
   label,
   placeholder,
   description,
+  disabled,
   rows,
 }: {
   label: string
   placeholder?: string
   description?: string | null
+  disabled?: boolean
   rows?: number
 }) {
   const field = useFieldContext<string>()
@@ -22,6 +24,7 @@ function FormFieldTextarea({
       rows={rows}
       value={field.state.value}
       error={field.state.meta.errors[0]?.message}
+      disabled={disabled}
       onChange={(e) => field.handleChange(e.target.value)}
       onBlur={() => field.handleBlur()}
     />

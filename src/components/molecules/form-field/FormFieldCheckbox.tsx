@@ -5,12 +5,14 @@ import type { FieldCheckboxProps } from '#/components/molecules/plain-field/Fiel
 function FormFieldCheckbox({
   label,
   description,
+  disabled,
   options,
   orientation,
   renderOption,
 }: {
   label: string
   description?: string | null
+  disabled?: boolean
   options?: { value: string; label: string }[]
   orientation?: FieldCheckboxProps['orientation']
   renderOption?: FieldCheckboxProps['renderOption']
@@ -22,6 +24,7 @@ function FormFieldCheckbox({
       title={label}
       description={description}
       error={field.state.meta.errors[0]?.message}
+      disabled={disabled}
       value={field.state.value}
       onChange={(value) => field.handleChange(value)}
       options={options}

@@ -15,6 +15,7 @@ interface FieldSelectProps {
   value: string
   onValueChange: (value: string) => void
   placeholder?: string
+  disabled?: boolean
   options: { value: string; label: string }[]
 }
 
@@ -25,11 +26,12 @@ function FieldSelect({
   value,
   onValueChange,
   placeholder,
+  disabled,
   options,
 }: FieldSelectProps) {
   return (
     <Field title={title} description={description} error={error}>
-      <Select value={value} onValueChange={onValueChange}>
+      <Select value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectTrigger aria-invalid={!!error}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

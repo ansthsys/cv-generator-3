@@ -5,7 +5,11 @@ export async function getUserEducations(cvId: string, userId: string) {
   const { findCvById } = await import('#/lib/repository/cv')
   const cv = await findCvById(cvId)
   if (!cv || cv.userId !== userId) throw new Error('CV not found')
-  return repo.findEducationsByCvId(cvId)
+  const educations = await repo.findEducationsByCvId(cvId)
+  return educations.map((edu) => ({
+    ...edu,
+    gpa: edu.gpa ? Number(edu.gpa) : null,
+  }))
 }
 
 export async function createUserEducation(

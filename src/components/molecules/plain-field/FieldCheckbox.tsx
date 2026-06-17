@@ -11,6 +11,7 @@ interface FieldCheckboxProps {
   error?: string | null
   value: boolean | string[]
   onChange: (value: boolean | string[]) => void
+  disabled?: boolean
   options?: { value: string; label: string }[]
   orientation?: 'vertical' | 'horizontal'
   renderOption?: (props: {
@@ -27,6 +28,7 @@ function FieldCheckbox({
   error,
   value,
   onChange,
+  disabled,
   options = [],
   orientation = 'vertical',
   renderOption,
@@ -39,6 +41,7 @@ function FieldCheckbox({
         <Checkbox
           id={id}
           checked={value}
+          disabled={disabled}
           onCheckedChange={(val) => {
             if (typeof val === 'boolean') onChange(val)
           }}

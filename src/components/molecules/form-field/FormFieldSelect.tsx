@@ -5,11 +5,13 @@ function FormFieldSelect({
   label,
   placeholder,
   description,
+  disabled,
   options,
 }: {
   label: string
   placeholder?: string
   description?: string | null
+  disabled?: boolean
   options: { value: string; label: string }[]
 }) {
   const field = useFieldContext<string>()
@@ -22,6 +24,7 @@ function FormFieldSelect({
       options={options}
       value={field.state.value}
       error={field.state.meta.errors[0]?.message}
+      disabled={disabled}
       onValueChange={(v) => field.handleChange(v)}
     />
   )
