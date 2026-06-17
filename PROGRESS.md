@@ -2,20 +2,35 @@
 
 ## Status
 
-| Item            | Detail                                     |
-| --------------- | ------------------------------------------ |
-| Current         | Phase 1 — Step 1 (Project add + edit form) |
-| Phase progress  | 0 / 6 steps completed                      |
-| Timeline detail | [Lihat TIMELINE.md](./TIMELINE.md)         |
+| Item            | Detail                             |
+| --------------- | ---------------------------------- |
+| Current         | Phase 2 — Adjust UI + UX           |
+| Phase progress  | 0 / 4 steps completed              |
+| Timeline detail | [Lihat TIMELINE.md](./TIMELINE.md) |
 
-## Phase 1 — CRUD Forms (current)
+## Phase 1 — CRUD Forms (complete)
 
-- [ ] Project add + edit form
-- [ ] Certificate add + edit form
-- [ ] Award add + edit form
-- [ ] Organization add + edit form
-- [ ] SocialLink add + edit form
-- [ ] Education edit form
+- [x] Project add + edit form
+- [x] Certificate add + edit form
+- [x] Award add + edit form
+- [x] Organization add + edit form
+- [x] SocialLink add + edit form (merged into PersonalDetail)
+- [x] Education edit form
+
+### Phase 1 Migrations
+
+- [x] Delete manual Zod schemas (`lib/schema/cv.ts`, `lib/form/cv.ts`)
+- [x] Migrate all 9 form files to generated input schemas (`XxxInputType` + `XxxInputSchema`)
+- [x] Migrate date picker from native `<input type="date">` to shadcn Popover + Calendar
+- [x] Export `inputClasses` from `Input.tsx` for reuse
+- [x] Fix Education `gpa` Decimal/number type mismatch (service layer)
+
+## Phase 2 — Adjust UI (current)
+
+- [ ] Shadcn component pass (replace remaining raw elements)
+- [ ] Sonner toast for mutation errors/success
+- [ ] Drag-and-drop reorder (Experience, Education)
+- [ ] Loading skeletons (dashboard + CV editor)
 
 ## Completed
 
@@ -31,10 +46,10 @@
 
 - Prisma schema with all CV models + Zod generator config
 - Three-layer architecture (Repository -> Service -> ServerFn)
-- Zod form schemas + form options for all CV domains
+- Generated Zod input schemas + form options for all CV domains
 - TanStack Query hooks + nested key convention (`['cv', cvId, 'domain']`)
 - Dashboard route (CV list, create, delete)
-- CV editor base (9 sections, some CRUD incomplete)
+- CV editor with all 9 section CRUD forms complete
 
 ## Known Issues
 

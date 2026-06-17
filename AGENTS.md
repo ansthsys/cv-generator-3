@@ -41,7 +41,7 @@
 - Use `useAppForm` from `#/hooks/useAppForm` for complex/multi-field forms.
 - `plain-field/FieldXxx` — standalone forms or custom logic. Pass `value`, `onChange`, `error` manually. Use when TanStack Form context is not needed (simple forms, one-off fields).
 - `form-field/FormFieldXxx` — inside `form.AppField` with `useAppForm`. Auto-wired via field context. Use for complex forms with validation.
-- Zod schemas in `lib/schema/`, form options in `lib/form/`. One file per domain/group.
+- Form options in `lib/form/` (one file per domain). Zod schemas from `prisma-zod-generator` at `#/generated/zod/schemas/variants/input/`. No manual schema files for models. Manual Zod schemas are allowed only for non-model data (route params, query params, etc.).
 
 ## UI
 

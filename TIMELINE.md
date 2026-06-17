@@ -4,105 +4,54 @@ Single source of truth untuk semua step pengerjaan. Detail per step: scope, patt
 
 ---
 
-## Phase 1 — Lengkapi CRUD Forms
+## Phase 1 — Lengkapi CRUD Forms (selesai)
 
-### 1. Project — add + edit form
+Semua 9 section CV editor sudah memiliki add/edit/delete inline forms menggunakan `useAppForm` + generated Zod schemas.
 
-| Item         | Detail                                                                                                             |
-| ------------ | ------------------------------------------------------------------------------------------------------------------ |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                                                                         |
-| Pattern      | Copy `ExperienceSection`, sesuaikan field dan mutation                                                             |
-| Scope        | Tambah form add + edit di `ProjectSection` (mirip ExperienceSection). Saat ini hanya list + delete.                |
-| Fields       | `name`, `role`, `description`, `url`, `techStack` (textarea, comma-separated), `startDate`, `endDate`, `isCurrent` |
-| Hooks        | `useCreateProjectMutation(cvId)`, `useUpdateProjectMutation(cvId)`                                                 |
-| Server       | `createProject`, `updateProject` (sudah ada)                                                                       |
-| Dependencies | Tidak ada                                                                                                          |
-| Notes        | Edit inline pakai state `editing/editForm` seperti Experience                                                      |
+### Migrasi yang dilakukan
 
-### 2. Certificate — add + edit form
-
-| Item         | Detail                                                                        |
-| ------------ | ----------------------------------------------------------------------------- |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                                    |
-| Pattern      | Copy `ExperienceSection`, sesuaikan field dan mutation                        |
-| Scope        | Tambah form add + edit di `CertificateSection`. Saat ini hanya list + delete. |
-| Fields       | `name`, `issuer`, `url`, `issueDate`, `expirationDate`                        |
-| Hooks        | `useCreateCertificateMutation(cvId)`, `useUpdateCertificateMutation(cvId)`    |
-| Server       | `createCertificate`, `updateCertificate` (sudah ada)                          |
-| Dependencies | Tidak ada                                                                     |
-
-### 3. Award — add + edit form
-
-| Item         | Detail                                                                  |
-| ------------ | ----------------------------------------------------------------------- |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                              |
-| Pattern      | Copy `ExperienceSection`, sesuaikan field dan mutation                  |
-| Scope        | Tambah form add + edit di `AwardSection`. Saat ini hanya list + delete. |
-| Fields       | `title`, `issuer`, `date`, `description`                                |
-| Hooks        | `useCreateAwardMutation(cvId)`, `useUpdateAwardMutation(cvId)`          |
-| Server       | `createAward`, `updateAward` (sudah ada)                                |
-| Dependencies | Tidak ada                                                               |
-
-### 4. Organization — add + edit form
-
-| Item         | Detail                                                                         |
-| ------------ | ------------------------------------------------------------------------------ |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                                     |
-| Pattern      | Copy `ExperienceSection`, sesuaikan field dan mutation                         |
-| Scope        | Tambah form add + edit di `OrganizationSection`. Saat ini hanya list + delete. |
-| Fields       | `name`, `role`, `startDate`, `endDate`, `isCurrent`, `description`, `url`      |
-| Hooks        | `useCreateOrganizationMutation(cvId)`, `useUpdateOrganizationMutation(cvId)`   |
-| Server       | `createOrganization`, `updateOrganization` (sudah ada)                         |
-| Dependencies | Tidak ada                                                                      |
-
-### 5. SocialLink — add + edit form
-
-| Item         | Detail                                                                       |
-| ------------ | ---------------------------------------------------------------------------- |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                                   |
-| Pattern      | Copy `SkillSection` (simple add inline, tanpa edit form kompleks)            |
-| Scope        | Tambah form add + edit di `SocialLinkSection`. Saat ini hanya list + delete. |
-| Fields       | `label`, `url`                                                               |
-| Hooks        | `useCreateSocialLinkMutation(cvId)`, `useUpdateSocialLinkMutation(cvId)`     |
-| Server       | `createSocialLink`, `updateSocialLink` (sudah ada)                           |
-| Dependencies | Tidak ada                                                                    |
-
-### 6. Education — edit form
-
-| Item         | Detail                                                                                            |
-| ------------ | ------------------------------------------------------------------------------------------------- |
-| File         | `src/routes/(dashboard)/cv.$cvId.edit.tsx`                                                        |
-| Pattern      | Copy edit inline dari `ExperienceSection`                                                         |
-| Scope        | Tambah edit state + form di `EducationSection`. Saat ini hanya add + delete.                      |
-| Fields       | `level`, `institution`, `fieldOfStudy`, `gpa`, `startDate`, `endDate`, `isCurrent`, `description` |
-| Hooks        | `useUpdateEducationMutation(cvId)` (sudah di-import)                                              |
-| Server       | `updateEducation` (sudah ada)                                                                     |
-| Dependencies | Tidak ada                                                                                         |
-| Notes        | `gpa` perlu handle `number \| null` di input                                                      |
+- Hapus manual Zod schemas (`lib/schema/cv.ts`, `lib/form/cv.ts`)
+- Migrasi 9 form files ke generated input schemas (`XxxInputType` + `XxxInputSchema`)
+- Tambah shadcn Popover + Calendar untuk date picker
+- Fix Education `gpa` Decimal/number di service layer
+- Merge SocialLink ke halaman Personal Detail (bukan section terpisah)
+- Export `inputClasses` dari `input.tsx` untuk reuse
 
 ---
 
-## Phase 2 — Adjust UI
+## Phase 2 — Adjust UI (current)
 
 ### 7. Ganti raw `<input>` ke shadcn components
 
-| Item         | Detail                                                                                                        |
-| ------------ | ------------------------------------------------------------------------------------------------------------- |
-| Scope        | Semua section di `cv.$cvId.edit.tsx`                                                                          |
-| Target       | `<input>` -> `Input`, `<textarea>` -> `Textarea`, `<select>` -> `Select`, `<button>` -> `Button`              |
-| Add shadcn   | `bunx shadcn@latest add input textarea select`                                                                |
-| Dependencies | Butuh shadcn add dulu untuk komponen yang belum ada                                                           |
-| Notes        | `date` input mungkin tetap pakai native `<input type="date">`, tidak ada shadcn date picker di registry dasar |
+| Item         | Detail                                                                                             |
+| ------------ | -------------------------------------------------------------------------------------------------- |
+| Scope        | Semua section di CV editor                                                                         |
+| Target       | Ganti leftover raw elements ke shadcn (textarea, select sudah, date picker sudah Popover+Calendar) |
+| Dependencies | shadcn components sudah ter-install (calendar, popover)                                            |
+| Notes        | Sebagian sudah done. Audit mana yang masih raw.                                                    |
 
-### 8. Migrasi form kompleks ke `useAppForm` + Zod validasi
+### 8. Sonner toast untuk mutation feedback
 
-| Item         | Detail                                                                |
-| ------------ | --------------------------------------------------------------------- |
-| Priority     | `PersonalDetail` + `Experience` (paling kompleks)                     |
-| Pattern      | Copy pola dari auth forms (`SignInForm`, dll)                         |
-| Scope        | Ganti `useState` + raw form jadi `useAppForm` + `FieldXxx` components |
-| Dependencies | Step 7 (shadcn components sudah ter-install)                          |
-| Notes        | Minimal 2 section dulu, sisanya menyusul kalau perlu                  |
+| Item           | Detail                                                         |
+| -------------- | -------------------------------------------------------------- |
+| Scope          | Semua mutation hooks di CV editor + dashboard                  |
+| Implementation | `onError` -> `toast.error()`, `onSuccess` -> `toast.success()` |
+| Library        | shadcn Sonner sudah ter-install                                |
+
+### 9. Drag-and-drop reorder
+
+| Item           | Detail                                                          |
+| -------------- | --------------------------------------------------------------- |
+| Scope          | Experience, Education (yang punya `sortOrder` field)            |
+| Server         | `reorderXxx` functions sudah ada di service/server layer        |
+| Implementation | Drag handler di setiap item list, update sortOrder via mutation |
+
+### 10. Loading skeleton
+
+| Item    | Detail                                                   |
+| ------- | -------------------------------------------------------- |
+| Scope   | Dashboard (CV list loading), CV editor (section loading) |
+| Pattern | Skeleton component dari shadcn                           |
 
 ---
 
