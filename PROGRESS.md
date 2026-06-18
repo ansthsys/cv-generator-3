@@ -51,6 +51,17 @@
 - Dashboard route (CV list, create, delete)
 - CV editor with all 9 section CRUD forms complete
 
+### General Layout
+
+- [x] Split Navbar into atomic design (UserAvatar atom, 4 layout molecules)
+- [x] Active page indicators unified bg-muted/80
+- [x] Link activeProps + data-open for submenu triggers
+- [x] Child route detection via item.to (no prefix config)
+- [x] Full-height AppLayout (main + Container flex-1)
+- [x] Responsive container: max-w-5xl xl:max-w-7xl
+- [x] Header h-16, submenu triggers h-10 for consistency
+- [x] ESLint ignore src/generated/\*\*
+
 ## Known Issues
 
 - Build fails at Nitro stage (kysely compatibility, pre-existing)

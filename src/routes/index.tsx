@@ -1,11 +1,7 @@
 import { z } from 'zod'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { LogOutIcon, LoaderCircleIcon } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
 
-import { Button } from '#/components/atoms/ui/button'
-import { LoadingButton } from '#/components/atoms/common/LoadingButton'
-import { useSignOutMutation } from '#/hooks/mutation/auth'
-import { useSessionQuery } from '#/hooks/query/auth'
+import { AppLayout } from '#/components/templates/AppLayout'
 import {
   TypographyH1,
   TypographyH2,
@@ -39,8 +35,6 @@ const planOptions = [
 ]
 
 function Home() {
-  const signOutMutation = useSignOutMutation()
-  const { data: session, isPending } = useSessionQuery()
   const form = useAppForm({
     defaultValues: {
       name: '',
@@ -66,46 +60,9 @@ function Home() {
     },
   })
 
-  function handleLogout() {
-    signOutMutation.mutate()
-  }
-
   return (
-    <>
-      <header className="flex items-center justify-between border-b px-4 py-3">
-        <TypographyMuted className="text-sm font-medium">
-          CV Generator 3
-        </TypographyMuted>
-        {isPending ? (
-          <LoaderCircleIcon className="size-4 animate-spin text-muted-foreground" />
-        ) : session?.user ? (
-          <div className="flex items-center gap-3">
-            <TypographySmall>{session.user.email}</TypographySmall>
-            <LoadingButton
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              isLoading={signOutMutation.isPending}
-              loadingText="Signing out..."
-            >
-              <LogOutIcon className="size-4" />
-              Log out
-            </LoadingButton>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">
-                Sign in
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button size="sm">Sign up</Button>
-            </Link>
-          </div>
-        )}
-      </header>
-      <div className="mx-auto max-w-sm p-4">
+    <AppLayout>
+      <div className="mx-auto max-w-sm">
         <section className="space-y-4">
           <TypographyH1>CV Generator 3</TypographyH1>
           <TypographyLead>Build your professional CV with ease</TypographyLead>
@@ -158,7 +115,7 @@ function Home() {
             className="space-y-4"
           >
             <form.AppField name="name">
-              {(field) => (
+              {(field: any) => (
                 <field.FieldInput
                   label="Nama Lengkap"
                   description="Lorem ipsum dolor sit amet, esse amet sunt consectetur ipsum sint do aute exercitation ut."
@@ -168,7 +125,7 @@ function Home() {
             </form.AppField>
 
             <form.AppField name="bio">
-              {(field) => (
+              {(field: any) => (
                 <field.FieldTextarea
                   label="Bio"
                   placeholder="Tell us about yourself..."
@@ -178,7 +135,7 @@ function Home() {
             </form.AppField>
 
             <form.AppField name="gender">
-              {(field) => (
+              {(field: any) => (
                 <field.FieldSelect
                   label="Gender"
                   placeholder="Pilih"
@@ -191,7 +148,7 @@ function Home() {
             </form.AppField>
 
             <form.AppField name="skills">
-              {(field) => (
+              {(field: any) => (
                 <field.FieldCheckbox
                   label="Skills"
                   description="Pilih minimal 1"
@@ -201,7 +158,7 @@ function Home() {
             </form.AppField>
 
             <form.AppField name="plan">
-              {(field) => (
+              {(field: any) => (
                 <field.FieldRadioGroup
                   label="Subscription Plan"
                   options={planOptions}
@@ -215,6 +172,6 @@ function Home() {
           </form>
         </section>
       </div>
-    </>
+    </AppLayout>
   )
 }

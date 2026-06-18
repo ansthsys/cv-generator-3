@@ -5,7 +5,7 @@
 @import '@fontsource-variable/merriweather';
 @plugin '@tailwindcss/typography';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(html.dark *));
 
 :root {
   --sea-ink: #173a40;
@@ -63,7 +63,7 @@
   --sidebar-ring: oklch(0.714 0.014 41.2);
 }
 
-.dark {
+html.dark {
   --sea-ink: #d7ece8;
   --sea-ink-soft: #afcdc8;
   --lagoon: #60d7cf;

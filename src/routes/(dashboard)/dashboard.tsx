@@ -1,11 +1,5 @@
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useRouter,
-} from '@tanstack/react-router'
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { PlusIcon, LoaderCircleIcon } from 'lucide-react'
-import { useSessionQuery } from '#/hooks/query/auth'
 import { useCvListQuery } from '#/hooks/query/cv'
 import { useCreateCvMutation, useDeleteCvMutation } from '#/hooks/mutation/cv'
 import { TypographyH2, TypographyMuted } from '#/components/atoms/typography'
@@ -15,31 +9,16 @@ import { useState } from 'react'
 
 export const Route = createFileRoute('/(dashboard)/dashboard')({
   component: DashboardPage,
-  beforeLoad: async ({ context }) => {
-    const session = context.session
-    if (!session) {
-      throw redirect({ to: '/login' })
-    }
-  },
 })
 
 function DashboardPage() {
   const router = useRouter()
-  const { data: session, isPending: sessionPending } = useSessionQuery()
   const { data: cvs, isPending: cvsPending } = useCvListQuery()
   const deleteCvMutation = useDeleteCvMutation()
   const [showCreate, setShowCreate] = useState(false)
 
-  if (sessionPending || !session) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <LoaderCircleIcon className="size-6 animate-spin text-muted-foreground" />
-      </div>
-    )
-  }
-
   return (
-    <div className="mx-auto max-w-4xl p-6">
+    <>
       <header className="mb-8 flex items-center justify-between">
         <div>
           <TypographyH2>My CVs</TypographyH2>
@@ -96,7 +75,7 @@ function DashboardPage() {
           <TypographyMuted>No CVs yet. Create your first one.</TypographyMuted>
         </div>
       )}
-    </div>
+    </>
   )
 }
 
