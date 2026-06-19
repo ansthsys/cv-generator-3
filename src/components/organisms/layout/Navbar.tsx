@@ -104,6 +104,7 @@ function Navbar() {
   function handleSubmenuEnter(key: string) {
     clearTimeout(submenuTimer.current)
     setActiveSubmenu(key)
+    setClickedSubmenu((prev) => (prev !== null ? key : null))
   }
 
   function handleSubmenuLeave() {
@@ -115,8 +116,14 @@ function Navbar() {
   }
 
   function handleSubmenuClick(key: string) {
-    setClickedSubmenu((prev) => (prev === key ? null : key))
-    setActiveSubmenu((prev) => (prev === key ? null : key))
+    setClickedSubmenu((prev) => {
+      if (prev === key) {
+        setActiveSubmenu(null)
+        return null
+      }
+      setActiveSubmenu(key)
+      return key
+    })
   }
 
   function hasActiveChild(
