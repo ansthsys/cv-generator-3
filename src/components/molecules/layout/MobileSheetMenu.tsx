@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { Button } from '#/components/atoms/ui/button'
+import { ScrollArea } from '#/components/atoms/ui/scroll-area'
 import { MobileUserSection } from '#/components/molecules/layout/MobileUserSection'
 
 interface MobileSheetMenuProps {
@@ -30,7 +31,7 @@ function MobileSheetMenu({
 }: MobileSheetMenuProps) {
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-3 pt-4">
+      <ScrollArea className="flex-1 px-3 pt-4">
         <div className="flex flex-col gap-1">
           <Button
             variant="ghost"
@@ -72,7 +73,7 @@ function MobileSheetMenu({
             </Button>
           ))}
         </div>
-      </div>
+      </ScrollArea>
       <MobileUserSection user={user} handleLogout={handleLogout} />
     </>
   )

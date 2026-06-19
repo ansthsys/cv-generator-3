@@ -1,3 +1,4 @@
+export { cvDefaultValues, cvFormOpts } from './cv'
 export {
   personalDetailDefaultValues,
   personalDetailFormOpts,

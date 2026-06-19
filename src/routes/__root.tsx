@@ -9,7 +9,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../assets/styles/global.css?url'
 
-import { Toaster } from 'sonner'
+import { Toaster } from '#/components/atoms/ui/sonner'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'

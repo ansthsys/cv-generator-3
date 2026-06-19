@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { queryKeys, mutationKeys } from '#/lib/tanstack-query/keys'
 import * as cvServer from '#/lib/server/cv'
 import * as experienceServer from '#/lib/server/experience'
@@ -31,6 +32,10 @@ export function useCreateCvMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cv.lists })
+      toast.success('CV created')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 }
@@ -58,6 +63,10 @@ export function useDeleteCvMutation() {
     mutationFn: (id: string) => cvServer.deleteCv({ data: id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cv.lists })
+      toast.success('CV deleted')
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 }
