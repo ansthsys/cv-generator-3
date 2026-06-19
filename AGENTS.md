@@ -10,6 +10,7 @@
 - No emojis, emoticons, or any Unicode pictograms in code or commits.
 - No default exports. Always use named exports.
 - Use `import type` for type-only imports.
+- Single source of truth for all types. Export from the defining file instead of duplicating.
 - Prioritize readability and simplicity. Write code a beginner can understand.
 - All user-facing strings must be in English. Error messages, labels, descriptions, and any text visible to users must use English.
 

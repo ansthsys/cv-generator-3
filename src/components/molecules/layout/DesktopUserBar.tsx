@@ -2,14 +2,11 @@ import { Link } from '@tanstack/react-router'
 
 import { Button } from '#/components/atoms/ui/button'
 import { UserAvatar } from '#/components/atoms/common/UserAvatar'
+import type { UsersType } from '#/generated/zod/schemas/models/Users.schema'
 
 interface DesktopUserBarProps {
   activeSubmenu: string | null
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  } | null
+  user?: UsersType | null
   handleLogout: () => void
 }
 

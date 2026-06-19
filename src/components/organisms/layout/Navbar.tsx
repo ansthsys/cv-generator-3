@@ -17,66 +17,75 @@ import {
 } from '#/components/atoms/ui/sheet'
 import { Container } from '#/components/atoms/common/Container'
 import { UserAvatar } from '#/components/atoms/common/UserAvatar'
+import type { UsersType } from '#/generated/zod/schemas/models/Users.schema'
 import { MobileSheetMenu } from '#/components/molecules/layout/MobileSheetMenu'
 import { DesktopSubNavbar } from '#/components/molecules/layout/DesktopSubNavbar'
 
-const headerItems = [
-  { type: 'link', label: 'Dashboard', to: '/dashboard' as const },
+export interface NavGuardContext {
+  user: UsersType | null
+}
+
+export type NavGuardItem = boolean | ((ctx: NavGuardContext) => boolean)
+export type NavGuard = NavGuardItem | NavGuardItem[]
+
+export function evaluateGuard(
+  guard: NavGuard | undefined,
+  ctx: NavGuardContext,
+): boolean {
+  if (guard === undefined || guard === true) return true
+  if (guard === false) return false
+  if (Array.isArray(guard)) return guard.every((g) => evaluateGuard(g, ctx))
+  if (typeof guard === 'function') return guard(ctx)
+  return true
+}
+
+export type NavLinkItem = {
+  type: 'link'
+  label: string
+  to: string
+  guard?: NavGuard
+}
+
+export type NavSubItem = {
+  label: string
+  description: string
+  to: string
+  guard?: NavGuard
+}
+
+export type NavSubmenuItem = {
+  type: 'submenu'
+  label: string
+  guard?: NavGuard
+  items: readonly NavSubItem[]
+}
+
+const headerItems: readonly (NavLinkItem | NavSubmenuItem)[] = [
+  {
+    type: 'link',
+    label: 'Dashboard',
+    to: '/dashboard',
+  },
   {
     type: 'submenu',
     label: 'Admin',
     items: [
-      { label: 'Users', description: 'Manage users', to: '/' as const },
-      { label: 'Settings', description: 'App settings', to: '/' as const },
-      { label: 'Analytics', description: 'Dashboard data', to: '/' as const },
-      { label: 'Logs', description: 'Activity logs', to: '/' as const },
-      { label: 'Users', description: 'Manage users', to: '/' as const },
-      { label: 'Settings', description: 'App settings', to: '/' as const },
-      { label: 'Analytics', description: 'Dashboard data', to: '/' as const },
-      { label: 'Logs', description: 'Activity logs', to: '/' as const },
-      { label: 'Users', description: 'Manage users', to: '/' as const },
-      { label: 'Settings', description: 'App settings', to: '/' as const },
-      { label: 'Analytics', description: 'Dashboard data', to: '/' as const },
-      { label: 'Logs', description: 'Activity logs', to: '/' as const },
-      { label: 'Users', description: 'Manage users', to: '/' as const },
-      { label: 'Settings', description: 'App settings', to: '/' as const },
-      { label: 'Analytics', description: 'Dashboard data', to: '/' as const },
-      { label: 'Logs', description: 'Activity logs', to: '/' as const },
-    ] as const,
+      { label: 'Users', description: 'Manage users', to: '/' },
+      { label: 'Settings', description: 'App settings', to: '/' },
+      { label: 'Analytics', description: 'Dashboard data', to: '/' },
+      { label: 'Logs', description: 'Activity logs', to: '/' },
+    ],
   },
   {
     type: 'submenu',
     label: 'Menu 2',
     items: [
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-      { label: 'Item A', description: 'Dummy A', to: '/' as const },
-      { label: 'Item B', description: 'Dummy B', to: '/' as const },
-      { label: 'Item C', description: 'Dummy C', to: '/' as const },
-    ] as const,
+      { label: 'Item A', description: 'Dummy A', to: '/' },
+      { label: 'Item B', description: 'Dummy B', to: '/' },
+      { label: 'Item C', description: 'Dummy C', to: '/' },
+    ],
   },
-] as const
-
-const submenuItems = headerItems.filter(
-  (i): i is Extract<(typeof headerItems)[number], { type: 'submenu' }> =>
-    i.type === 'submenu',
-)
+]
 
 function Navbar() {
   const navigate = useNavigate()
@@ -84,7 +93,7 @@ function Navbar() {
   const currentPath = location.pathname
   const { data: session } = useSessionQuery()
   const signOutMutation = useSignOutMutation()
-  const user = session?.user
+  const user = session?.user ?? null
   const [open, setOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [clickedSubmenu, setClickedSubmenu] = useState<string | null>(null)
@@ -125,8 +134,19 @@ function Navbar() {
     navigate({ to: '/login' })
   }
 
-  const adminItems = submenuItems[0].items
-  const menu2Items = submenuItems[1].items
+  const visibleItems = headerItems.filter((item) => {
+    if (item.type === 'link') return evaluateGuard(item.guard, { user })
+    return item.items.some((child) => evaluateGuard(child.guard, { user }))
+  })
+
+  const filteredSubmenuItems = visibleItems
+    .filter((i): i is NavSubmenuItem => i.type === 'submenu')
+    .map((submenu) => ({
+      ...submenu,
+      items: submenu.items.filter((item) =>
+        evaluateGuard(item.guard, { user }),
+      ),
+    }))
 
   return (
     <div className="sticky top-0 z-40">
@@ -143,7 +163,7 @@ function Navbar() {
 
           <div className="flex items-center gap-2">
             <div className="hidden md:flex md:items-center md:gap-2">
-              {headerItems.map((item) => {
+              {visibleItems.map((item) => {
                 if (item.type === 'link') {
                   return (
                     <Button
@@ -246,8 +266,7 @@ function Navbar() {
                     </SheetClose>
                   </SheetHeader>
                   <MobileSheetMenu
-                    adminItems={adminItems}
-                    menu2Items={menu2Items}
+                    items={visibleItems}
                     user={user}
                     handleLogout={handleLogout}
                   />
@@ -259,7 +278,7 @@ function Navbar() {
       </header>
       <DesktopSubNavbar
         activeSubmenu={activeSubmenu}
-        submenuItems={submenuItems}
+        submenuItems={filteredSubmenuItems}
         user={user}
         handleSubmenuEnter={handleSubmenuEnter}
         handleSubmenuLeave={handleSubmenuLeave}

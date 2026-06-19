@@ -2,19 +2,27 @@ import { Link } from '@tanstack/react-router'
 
 import { Button } from '#/components/atoms/ui/button'
 import { UserAvatar } from '#/components/atoms/common/UserAvatar'
+import { cn } from '#/utils/index.ts'
+import type { UsersType } from '#/generated/zod/schemas/models/Users.schema'
 
 interface MobileUserSectionProps {
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  } | null
+  user?: UsersType | null
   handleLogout: () => void
+  className?: string
 }
 
-function MobileUserSection({ user, handleLogout }: MobileUserSectionProps) {
+function MobileUserSection({
+  user,
+  handleLogout,
+  className,
+}: MobileUserSectionProps) {
   return (
-    <div className="shrink-0 border-t border-primary px-3 pt-4 pb-6">
+    <div
+      className={cn(
+        'shrink-0 border-t border-primary px-3 pt-4 pb-6',
+        className,
+      )}
+    >
       {user ? (
         <>
           <div className="flex items-center gap-2 mb-4 ml-6">

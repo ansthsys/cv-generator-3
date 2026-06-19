@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Button } from '#/components/atoms/ui/button'
 import { Container } from '#/components/atoms/common/Container'
 import { DesktopUserBar } from '#/components/molecules/layout/DesktopUserBar'
+import type { UsersType } from '#/generated/zod/schemas/models/Users.schema'
 
 interface DesktopSubNavbarProps {
   activeSubmenu: string | null
@@ -14,11 +15,7 @@ interface DesktopSubNavbarProps {
       readonly to: string
     }>
   }>
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  } | null
+  user?: UsersType | null
   handleSubmenuEnter: (key: string) => void
   handleSubmenuLeave: () => void
   handleLogout: () => void

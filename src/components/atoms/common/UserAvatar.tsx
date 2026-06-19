@@ -1,3 +1,4 @@
+import type { UsersType } from '#/generated/zod/schemas/models/Users.schema'
 import {
   Avatar,
   AvatarFallback,
@@ -6,11 +7,7 @@ import {
 import { cn } from '#/utils'
 
 interface UserAvatarProps {
-  user?: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  } | null
+  user?: UsersType | null
   size?: 'sm' | 'default'
   details?: boolean
   className?: string
@@ -32,13 +29,11 @@ function UserAvatar({
       {user.image ? (
         <AvatarImage
           src={user.image}
-          alt={user.name ?? ''}
+          alt={user.name}
           className="rounded-none"
         />
       ) : (
-        <AvatarFallback className="rounded-none">
-          {(user.name ?? user.email ?? '?')[0]}
-        </AvatarFallback>
+        <AvatarFallback className="rounded-none">{user.name[0]}</AvatarFallback>
       )}
     </Avatar>
   )
@@ -50,7 +45,7 @@ function UserAvatar({
       {avatar}
       <div className="flex flex-col">
         <span className="font-medium capitalize tracking-wider text-sm">
-          {user.name ?? 'User'}
+          {user.name}
         </span>
         <span className="text-xs text-muted-foreground font-normal normal-case">
           {user.email}
