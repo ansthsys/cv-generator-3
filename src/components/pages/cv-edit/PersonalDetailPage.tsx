@@ -1,7 +1,7 @@
 import { useParams } from '@tanstack/react-router'
 import { usePersonalDetailQuery } from '#/hooks/query/cv'
 import { SectionPageTemplate } from '#/components/templates'
-import { PersonalDetailSection } from '#/components/organisms/cv/PersonalDetailSection'
+import { PersonalDetailForm } from '#/components/organisms/cv/PersonalDetailForm'
 import { SocialLinkSection } from '#/components/organisms/cv/SocialLinkSection'
 import { Separator } from '#/components/atoms/ui/separator'
 
@@ -28,7 +28,7 @@ function PersonalDetailPage() {
         </div>
       }
     >
-      <PersonalDetailSection cvId={cvId} />
+      <PersonalDetailForm cvId={cvId} />
       <Separator className="my-6" />
       <SocialLinkSection cvId={cvId} />
     </SectionPageTemplate>

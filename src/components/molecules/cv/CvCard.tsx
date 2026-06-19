@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { MoreVerticalIcon, ImageOffIcon, ChevronRightIcon } from 'lucide-react'
-import { Tooltip } from '#/components/molecules/common/Tooltip'
+import { Tooltip } from '#/components/atoms/common/Tooltip'
 import { TypographyMuted, TypographyP } from '#/components/atoms/typography'
 import { Button } from '#/components/atoms/ui/button'
 import { Card, CardContent } from '#/components/atoms/ui/card'

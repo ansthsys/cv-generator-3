@@ -1,6 +1,6 @@
 import { TypographyH3 } from '#/components/atoms/typography'
 import { CvListCard } from '#/components/organisms/cv/CvListCard'
-import { StatisticsCard } from '#/components/organisms/dashboard/StatisticsCard'
+import { StatisticsCard } from '#/components/molecules/dashboard/StatisticsCard'
 
 function DashboardPage() {
   return (
