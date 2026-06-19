@@ -9,7 +9,7 @@ export function TypographyH4({
   return (
     <h4
       className={cn(
-        'scroll-m-20 text-lead font-semibold font-heading tracking-tight',
+        'scroll-m-20 text-xl font-semibold font-heading tracking-tight',
         className,
       )}
       {...props}

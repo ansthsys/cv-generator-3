@@ -7,8 +7,8 @@ export function TypographyLarge({
   ...props
 }: React.ComponentProps<'div'>) {
   return (
-    <div
-      className={cn('text-lead font-semibold font-heading', className)}
+    <p
+      className={cn('text-lg font-semibold font-heading', className)}
       {...props}
     />
   )
