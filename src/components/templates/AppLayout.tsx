@@ -12,7 +12,7 @@ function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-dvh flex-col">
       <Navbar />
       <main className="flex flex-1 flex-col">
-        <Container className="flex-1 py-6">{children}</Container>
+        <Container className="flex flex-col flex-1 py-6">{children}</Container>
       </main>
       <Footer />
     </div>

@@ -57,7 +57,7 @@ function CvCard({ cv, onDelete, isDeleting, image }: CvCardProps) {
             </TypographyMuted>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
-            <Link to="/cv/$cvId/edit" params={{ cvId: cv.id }}>
+            <Link to="/cv/$cvId" params={{ cvId: cv.id }}>
               <Button variant="outline" size="icon" className="-mt-0.5">
                 <ChevronRightIcon className="size-4" />
               </Button>
@@ -75,7 +75,7 @@ function CvCard({ cv, onDelete, isDeleting, image }: CvCardProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link to="/cv/$cvId/edit" params={{ cvId: cv.id }}>
+                  <Link to="/cv/$cvId" params={{ cvId: cv.id }}>
                     Edit
                   </Link>
                 </DropdownMenuItem>

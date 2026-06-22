@@ -45,7 +45,11 @@ export function useUpdateCvMutation(cvId: string) {
 
   return useMutation({
     mutationKey: mutationKeys.cv.update(cvId),
-    mutationFn: async (values: { name?: string; isPublic?: boolean }) => {
+    mutationFn: async (values: {
+      name?: string
+      isPublic?: boolean
+      config?: unknown
+    }) => {
       const cv = await cvServer.updateCv({ data: { id: cvId, ...values } })
       return cv
     },

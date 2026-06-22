@@ -7,7 +7,7 @@ import { Separator } from '#/components/atoms/ui/separator'
 
 function PersonalDetailPage() {
   const { cvId } = useParams({
-    from: '/(dashboard)/cv/$cvId/edit/personal-detail',
+    from: '/(dashboard)/cv/$cvId',
   })
   const { isPending } = usePersonalDetailQuery(cvId)
 

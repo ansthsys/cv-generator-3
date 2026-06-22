@@ -16,13 +16,24 @@ const PAGES = [
 function PageNavigation({ cvId }: { cvId: string }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const currentId = location.pathname.split('/').pop() || ''
-  const current = PAGES.find((p) => p.id === currentId)
+  const segments = location.pathname.split('/').filter(Boolean)
+  const currentSegment = segments.pop() ?? ''
+  const resolvedId =
+    currentSegment === 'edit' ? 'personal-detail' : currentSegment
+  const current = PAGES.find((p) => p.id === resolvedId)
   const currentIndex = current ? PAGES.indexOf(current) : -1
   const prev = currentIndex > 0 ? PAGES[currentIndex - 1] : null
   const next = currentIndex < PAGES.length - 1 ? PAGES[currentIndex + 1] : null
 
   if (!current) return null
+
+  function navigateTo(page: (typeof PAGES)[number]) {
+    if (page.id === 'personal-detail') {
+      navigate({ to: `/cv/${cvId}/edit` })
+    } else {
+      navigate({ to: `/cv/${cvId}/edit/${page.id}` })
+    }
+  }
 
   return (
     <div className="flex items-center justify-between border-b pb-3">
@@ -31,21 +42,13 @@ function PageNavigation({ cvId }: { cvId: string }) {
       </div>
       <div className="flex gap-2">
         {prev && (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => navigate({ to: `/cv/${cvId}/edit/${prev.id}` })}
-          >
+          <Button size="sm" variant="outline" onClick={() => navigateTo(prev)}>
             <ChevronLeftIcon className="size-4" />
             {prev.label}
           </Button>
         )}
         {next && (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => navigate({ to: `/cv/${cvId}/edit/${next.id}` })}
-          >
+          <Button size="sm" variant="outline" onClick={() => navigateTo(next)}>
             {next.label}
             <ChevronRightIcon className="size-4" />
           </Button>

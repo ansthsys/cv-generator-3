@@ -38,9 +38,12 @@ export async function insertCv(data: {
 
 export async function updateCvById(
   id: string,
-  data: { name?: string; isPublic?: boolean },
+  data: { name?: string; isPublic?: boolean; config?: unknown },
 ) {
-  return prisma.cv.update({ where: { id }, data })
+  return prisma.cv.update({
+    where: { id },
+    data: data as Parameters<typeof prisma.cv.update>[0]['data'],
+  })
 }
 
 export async function deleteCvById(id: string) {

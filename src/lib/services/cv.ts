@@ -17,7 +17,7 @@ export async function createUserCv(name: string, userId: string) {
 export async function updateUserCv(
   cvId: string,
   userId: string,
-  data: { name?: string; isPublic?: boolean },
+  data: { name?: string; isPublic?: boolean; config?: unknown },
 ) {
   const cv = await repo.findCvById(cvId)
   if (!cv || cv.userId !== userId) throw new Error('CV not found')

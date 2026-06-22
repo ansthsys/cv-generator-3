@@ -23,13 +23,19 @@ export const createCv = createServerFn({ method: 'POST' })
 
 export const updateCv = createServerFn({ method: 'POST' })
   .inputValidator(
-    (input: { id: string; name?: string; isPublic?: boolean }) => input,
+    (input: {
+      id: string
+      name?: string
+      isPublic?: boolean
+      config?: unknown
+    }) => input,
   )
   .handler(async ({ data }) => {
     const session = await ensureSession()
     return svc.updateUserCv(data.id, session.user.id, {
       name: data.name,
       isPublic: data.isPublic,
+      config: data.config,
     })
   })
 
