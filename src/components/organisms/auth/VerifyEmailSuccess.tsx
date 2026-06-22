@@ -14,9 +14,9 @@ function VerifyEmailSuccess() {
         Thank you for verifying your email address.
       </StatusAlert>
 
-      <div>
+      <div className="w-full">
         <Link to="/">
-          <Button>Go to home</Button>
+          <Button className="w-full">Go to home</Button>
         </Link>
       </div>
     </AuthFormLayout>

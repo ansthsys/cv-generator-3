@@ -31,9 +31,9 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           You can now sign in with your new password.
         </StatusAlert>
 
-        <div className="flex justify-center">
+        <div className="w-full">
           <Link to="/login">
-            <Button>Sign in</Button>
+            <Button className="w-full">Sign in</Button>
           </Link>
         </div>
       </AuthFormLayout>
