@@ -4,7 +4,7 @@
 
 | Item            | Detail                             |
 | --------------- | ---------------------------------- |
-| Current         | Phase 2 — Adjust UI + UX           |
+| Current         | Phase 2 — UI Polish                |
 | Phase progress  | 0 / 4 steps completed              |
 | Timeline detail | [Lihat TIMELINE.md](./TIMELINE.md) |
 
@@ -25,12 +25,29 @@
 - [x] Export `inputClasses` from `Input.tsx` for reuse
 - [x] Fix Education `gpa` Decimal/number type mismatch (service layer)
 
-## Phase 2 — Adjust UI (current)
+## Phase 2 — UI Polish (current)
 
 - [ ] Shadcn component pass (replace remaining raw elements)
 - [ ] Sonner toast for mutation errors/success
 - [ ] Drag-and-drop reorder (Experience, Education)
 - [ ] Loading skeletons (dashboard + CV editor)
+
+## Phase 3 — Wizard UX Enhancement
+
+- [ ] CV name edit inline (editable wizard header)
+- [ ] Dirty state + unsaved warning on navigation
+- [ ] Step indicator polish (progress, completion state)
+- [ ] Keyboard shortcuts (Ctrl+S to save)
+
+## Phase 4 — Preview + Output
+
+- [ ] CV template rendering / live preview
+- [ ] PDF export
+- [ ] Public CV page (`/cv/:slug`)
+
+## Phase 5 — Profile Management
+
+- [ ] Settings page (name, email, password)
 
 ## Completed
 
@@ -49,7 +66,7 @@
 - Generated Zod input schemas + form options for all CV domains
 - TanStack Query hooks + nested key convention (`['cv', cvId, 'domain']`)
 - Dashboard route (CV list, create, delete)
-- CV editor with all 9 section CRUD forms complete
+- CV wizard with 8 section route pages + PageNavigation
 
 ### General Layout
 
