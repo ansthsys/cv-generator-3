@@ -100,7 +100,7 @@ function CvSidebar({ cvId }: { cvId: string }) {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="w-full justify-between rounded-none border-b border-primary"
+              className="w-full justify-between border-t-0 border-x-0 border-b border-primary"
             >
               <span className="flex items-center gap-2">
                 {activeItem.icon}
@@ -111,7 +111,7 @@ function CvSidebar({ cvId }: { cvId: string }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-[var(--radix-dropdown-menu-trigger-width)] rounded-none"
+            className="w-[var(--radix-dropdown-menu-trigger-width)] shadow-none"
           >
             {SIDEBAR_ITEMS.map((item) => {
               const active = isActive(item)
