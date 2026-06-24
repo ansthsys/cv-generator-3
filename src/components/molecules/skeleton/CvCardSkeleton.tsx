@@ -4,7 +4,7 @@ import { Card, CardContent } from '#/components/atoms/ui/card'
 function CvCardSkeleton() {
   return (
     <Card variant="primary" size="sm">
-      <div className="-mt-(--card-spacing) aspect-3/4 max-h-96 overflow-hidden bg-muted" />
+      <Skeleton className="-mt-(--card-spacing) aspect-3/4 max-h-96 overflow-hidden" />
       <CardContent>
         <div className="space-y-2">
           <Skeleton className="h-5 w-3/4" />
